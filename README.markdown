@@ -58,8 +58,7 @@ The data set directory must contain the following files:
    * customers.csv: Defines the customers and their membership levels for the simulation with the following columns:
       - Customer Name
       - Membership Level (standard or executive)
-   * inventory.csv: Defines the store's stock configuration for the simulation 
-		with the following columns:
+   * inventory.csv: Defines the store's stock configuration for the simulation with the following columns:
       - Movie Title (must be present in movies.csv)
       - Media Type (dvd or bluray)
 	  - Quantity
@@ -73,5 +72,4 @@ The data set directory must contain the following files:
 The following datasets are provided with the distribution in the data directory:
 
    * default-dataset: All customers are standard level members
-   * executive-dataset: All customers are standard level members except Joe 
-		and John are executive level members.
+   * executive-dataset: All customers are standard level members except Joe and John are executive level members.
