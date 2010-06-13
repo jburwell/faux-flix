@@ -54,27 +54,27 @@ The simulator is executed as follows:
 
 The data set directory must contain the following files:
 
-	* movies.csv: Defines the movie catalog for the simulation with a
+   * movies.csv: Defines the movie catalog for the simulation with a
 		single column containing the movie title.
-	* customers.csv: Defines the customers and their membership levels
+   * customers.csv: Defines the customers and their membership levels
 		for the simulation with the following columns:
-			- Customer Name
-			- Membership Level (standard or executive)
-	* inventory.csv: Defines the store's stock configuration for the simulation 
+      - Customer Name
+      - Membership Level (standard or executive)
+   * inventory.csv: Defines the store's stock configuration for the simulation 
 		with the following columns:
-			- Movie Title (must be present in movies.csv)
-			- Media Type (dvd or bluray)
-			- Quantity
-	* commands.csv: Defines the commands that will be executed by the simulation
+      - Movie Title (must be present in movies.csv)
+      - Media Type (dvd or bluray)
+	  - Quantity
+   * commands.csv: Defines the commands that will be executed by the simulation
 		with the following columns:
-			- Date occurred (in the form of MM/dd/yyyy)
-			- Customer Name (must be present in customers.csv)
-			- Command Type (requests or mails)
-			- Movie Title (must be present in movies.csv)
-			- Media Type (dvd or bluray)
+      - Date occurred (in the form of MM/dd/yyyy)
+      - Customer Name (must be present in customers.csv)
+      - Command Type (requests or mails)
+      - Movie Title (must be present in movies.csv)
+      - Media Type (dvd or bluray)
 
 The following datasets are provided with the distribution in the data directory:
 
-	* default-dataset: All customers are standard level members
-	* executive-dataset: All customers are standard level members except Joe 
+   * default-dataset: All customers are standard level members
+   * executive-dataset: All customers are standard level members except Joe 
 		and John are executive level members.
