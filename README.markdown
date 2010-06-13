@@ -54,10 +54,8 @@ The simulator is executed as follows:
 
 The data set directory must contain the following files:
 
-   * movies.csv: Defines the movie catalog for the simulation with a
-		single column containing the movie title.
-   * customers.csv: Defines the customers and their membership levels
-		for the simulation with the following columns:
+   * movies.csv: Defines the movie catalog for the simulation with a single column containing the movie title.
+   * customers.csv: Defines the customers and their membership levels for the simulation with the following columns:
       - Customer Name
       - Membership Level (standard or executive)
    * inventory.csv: Defines the store's stock configuration for the simulation 
@@ -65,8 +63,7 @@ The data set directory must contain the following files:
       - Movie Title (must be present in movies.csv)
       - Media Type (dvd or bluray)
 	  - Quantity
-   * commands.csv: Defines the commands that will be executed by the simulation
-		with the following columns:
+   * commands.csv: Defines the commands that will be executed by the simulation with the following columns:
       - Date occurred (in the form of MM/dd/yyyy)
       - Customer Name (must be present in customers.csv)
       - Command Type (requests or mails)
