@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+ 
+<suite name="fauxflix" verbose="1" >
+
+	<test name="unit-tests">
+		<packages>
+ 			<package name="net.cockamamy.fauxflix.*" />
+   		</packages>
+ 	</test>
+ 
+</suite>
