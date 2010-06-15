@@ -24,7 +24,7 @@ stored and processed as soon as the video is available.
 
 ## Payment
 
-Payment is not a part of this simulation: you can assume that customers already pay a 
+Payment is not a part of this simulation.  It is assumed that customers already pay a 
 monthly subscription fee and pay no additional fee to rent a video. 
 
 ## Movies
@@ -50,7 +50,7 @@ operating systems.
 
 The simulator is executed as follows:
 
-	java -ea -jar faux-flix-1.0.0 [data set directory]
+	java -ea -jar faux-flix-1.0.0.jar [data set directory]
 
 The data set directory must contain the following files:
 

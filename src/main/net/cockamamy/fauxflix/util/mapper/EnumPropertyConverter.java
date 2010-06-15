@@ -48,7 +48,17 @@ public final class EnumPropertyConverter<E extends Enum<E>> implements
 
 		if (isNotBlank(aValue) == true) {
 
-			anEnumValue = Enum.valueOf(this.myEnumClass, aValue.toUpperCase());
+			try {
+
+				anEnumValue = Enum.valueOf(this.myEnumClass, aValue
+						.toUpperCase());
+
+			} catch (IllegalArgumentException e) {
+
+				throw new PropertyConversionException(aValue, this.myEnumClass,
+						e);
+
+			}
 
 		}
 

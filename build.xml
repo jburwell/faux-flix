@@ -131,9 +131,8 @@
 		<taskdef resource="testngtasks" 
 				 classpathref="testng"/>
 
-		<mkdir dir="${test.dir.report}" />
 		<testng classpathref="test.classpath"
-		        outputDir="${test.report.dir}"
+		        outputDir="${test.dir.report}"
 		        haltOnfailure="true">
 			 
 		   <xmlfileset dir="${test.dir.conf}" includes="testng.xml"/>

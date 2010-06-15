@@ -26,9 +26,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package net.cockamamy.fauxflix.util.mapper;
+package net.cockamamy.fauxflix.service.inventory;
 
-import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.util.mapper.*;
 
 import org.testng.annotations.*;
 

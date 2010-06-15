@@ -1,8 +1,8 @@
-package net.cockamamy.fauxflix.util.mapper;
+package net.cockamamy.fauxflix.service.inventory;
 
 import static net.cockamamy.fauxflix.service.ServiceLocator.*;
 import static net.cockamamy.fauxflix.util.StringUtilities.*;
-import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.util.mapper.*;
 
 /**
  *

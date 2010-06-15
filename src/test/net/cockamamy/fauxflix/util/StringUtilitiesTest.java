@@ -37,32 +37,51 @@ import org.testng.annotations.*;
 public final class StringUtilitiesTest {
 
 	private static final String IS_BLANK_PROVIDER = "is_blank_provider";
+	private static final String TO_BLANK_PROVIDER = "to_blank_provider";
 
-	@Test(dataProvider=IS_BLANK_PROVIDER)
+	@Test(dataProvider = IS_BLANK_PROVIDER)
 	public void testIsBlank(String aValue, boolean aBlankFlag) {
 
 		assertEquals(isBlank(aValue), aBlankFlag);
-		
+
 	}
-	
-	@Test(dataProvider=IS_BLANK_PROVIDER)
+
+	@Test(dataProvider = IS_BLANK_PROVIDER)
 	public void testIsNotBlank(String aValue, boolean aBlankFlag) {
 
 		assertEquals(isNotBlank(aValue), !aBlankFlag);
 
 	}
 
-	@DataProvider(name=IS_BLANK_PROVIDER)
-	public Object[][] provideIsBlank() {
-		
-		return new Object[][] {
-				{ "", true },
-				{ " ", true },
-				{ "        ", true },
-				{ null, true },
-				{ "foo", false }
-		};
-				
+	@Test(dataProvider = TO_BLANK_PROVIDER)
+	public void testToBlank(String aValue, String anExpectedResult) {
+
+		assertEquals(toBlank(aValue), anExpectedResult);
+
 	}
-	
+
+	@DataProvider(name = IS_BLANK_PROVIDER)
+	public Object[][] provideIsBlank() {
+
+		return new Object[][] {
+				
+			{ "", true }, { " ", true },
+			{ "        ", true }, { null, true }, { "foo", false }
+			
+		};
+
+	}
+
+	@DataProvider(name = TO_BLANK_PROVIDER)
+	public Object[][] provideToBlank() {
+
+		return new Object[][] {
+
+			{ "", BLANK_STRING }, { "         ", BLANK_STRING },
+			{ null, BLANK_STRING }, { "foo", "foo" }
+
+		};
+
+	}
+
 }
