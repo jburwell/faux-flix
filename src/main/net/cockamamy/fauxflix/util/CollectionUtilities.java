@@ -1,6 +1,7 @@
 package net.cockamamy.fauxflix.util;
 
 import static java.util.Collections.*;
+import static java.lang.String.*;
 
 import java.util.*;
 
@@ -41,9 +42,9 @@ public final class CollectionUtilities {
 	public static <T> List<T> buildUnmodifiableList(T... theElements) {
 
 		if (theElements == null) {
-			
+
 			return emptyList();
-			
+
 		}
 
 		List<T> aList = new ArrayList<T>(theElements.length);
@@ -56,6 +57,34 @@ public final class CollectionUtilities {
 
 		return unmodifiableList(aList);
 
+	}
+
+	public static <T> Set<T> buildUnmodifiableSet(T... theElements) {
+
+		if (theElements == null) {
+
+			return emptySet();
+
+		}
+
+		Set<T> aSet = new HashSet<T>(theElements.length);
+
+		for (T anElement : theElements) {
+
+			boolean aResult = aSet.add(anElement);
+
+			if (aResult != true) {
+
+				throw new IllegalStateException(format(
+						"Attempt to add a duplicate element, %1$s, to set.",
+						anElement));
+
+			}
+			
+		}
+
+		return unmodifiableSet(aSet);
+		
 	}
 
 }

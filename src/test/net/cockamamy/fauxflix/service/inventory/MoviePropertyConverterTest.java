@@ -26,11 +26,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package net.cockamamy.fauxflix.util.mapper;
+package net.cockamamy.fauxflix.service.inventory;
 
-import static org.testng.Assert.*;
+import static org.easymock.EasyMock.*;
+import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
+
+import java.util.*;
 
 import org.testng.annotations.*;
+
+import net.cockamamy.fauxflix.util.mapper.*;
 
 /**
  * 
@@ -39,81 +44,66 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractPropertyConverterTest<T, P extends PropertyConverter<T>> {
+@Test
+public final class MoviePropertyConverterTest extends
+		AbstractPropertyConverterTest<Movie, MoviePropertyConverter> {
 
-	private static final String CONVERT_VALUE_SUCCESS_PROVIDER = "convert_value_success_provider";
+	private static Set<String> TITLES = buildUnmodifiableSet(
+			"The Great Escape", "The Dirty Dozen", "Kelly's Heros",
+			"The Longest Day");
 
-	private static final String CONVERT_VALUE_FAILURE_PROVIDER = "convert_value_failure_provider";
+	private InventoryService myInventoryService;
 
-	private P myPropertyConverter = null;
 
-	@BeforeClass
-	public final void setup() {
-
-		this.doBeforeSetup();
-
-		this.myPropertyConverter = this.createPropertyConverter();
-
-		assert this.myPropertyConverter != null;
-		
-	}
-
+	@Override
 	protected void doBeforeSetup() {
 		
-		// Do nothing by default
+		this.myInventoryService = createMock(InventoryService.class);
 		
 	}
 
-	@Test(dataProvider = CONVERT_VALUE_SUCCESS_PROVIDER)
-	public final void testConvertValueSuccess(String aValue, T aResult) {
-
-		assertEquals(this.myPropertyConverter.convertValue(aValue), aResult);
-
-	}
-
-	@Test(dataProvider = CONVERT_VALUE_FAILURE_PROVIDER, expectedExceptions = PropertyConversionException.class)
-	public final void testConvertValueFailure(String aValue) {
-
-		this.myPropertyConverter.convertValue(aValue);
-
-	}
-
-	protected abstract P createPropertyConverter();
-
-	@DataProvider(name = CONVERT_VALUE_SUCCESS_PROVIDER)
-	public final Object[][] provideConvertValueSuccessData() {
-
-		return buildConvertValueSuccessData();
-
-	}
-
-	@DataProvider(name = CONVERT_VALUE_FAILURE_PROVIDER)
-	public final Object[][] provideConvertValueFailureData() {
-
-		return buildConvertValueFailureData();
-
-	}
-
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 * 
+	 * @see net.cockamamy.fauxflix.util.mapper.AbstractPropertyConverterTest#
+	 * buildConvertValueSuccessData()
 	 */
-	protected Object[][] buildConvertValueFailureData() {
+	@Override
+	protected Object[][] buildConvertValueSuccessData() {
 
-		return new Object[][] {};
+		Object[][] theData = new Object[TITLES.size()][2];
+		
+		int i = 0;
+		for (String aTitle : TITLES) {
+
+			Movie aMovie = new MovieImpl(aTitle);
+			
+			theData[i] = new Object[] { aTitle, aMovie };
+			expect(this.myInventoryService.addMovie(aTitle)).andReturn(
+					aMovie);
+			expect(this.myInventoryService.findMovie(aTitle)).andReturn(
+					aMovie);
+
+		}
+
+		expectLastCall().times(TITLES.size());
+		replay(this.myInventoryService);
+
+		return theData;
 
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 * 
+	 * @see net.cockamamy.fauxflix.util.mapper.AbstractPropertyConverterTest#
+	 * createPropertyConverter()
 	 */
-	protected abstract Object[][] buildConvertValueSuccessData();
+	@Override
+	protected MoviePropertyConverter createPropertyConverter() {
+
+		return new MoviePropertyConverter(this.myInventoryService);
+
+	}
 
 }

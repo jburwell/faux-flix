@@ -1,7 +1,7 @@
 package net.cockamamy.fauxflix.simulator;
 
-import static java.util.Collections.*;
 import static net.cockamamy.fauxflix.simulator.Command.*;
+import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
 
 import java.io.*;
 import java.util.*;
@@ -44,27 +44,6 @@ public final class CommandDataLoader extends
 
 	private static final String COMMAND_DATA_FILE_NAME = "commands.csv";
 
-	private static final List<ColumnDefinition> COLUMNS_DEFINITIONS;
-
-	static {
-
-		List<ColumnDefinition> theDefinitions = new ArrayList<ColumnDefinition>();
-
-		theDefinitions.add(new ColumnDefinition(OCCURRED_PROP_NAME,
-				new DatePropertyConverter()));
-		theDefinitions.add(new ColumnDefinition(CUSTOMER_PROP_NAME,
-				new CustomerPropertyConverter()));
-		theDefinitions.add(new ColumnDefinition(TYPE_PROP_NAME,
-				new EnumPropertyConverter<CommandType>(CommandType.class)));
-		theDefinitions.add(new ColumnDefinition(Command.MOVIE_PROP_NAME,
-				new MoviePropertyConverter()));
-		theDefinitions.add(new ColumnDefinition(Command.MEDIA_TYPE_PROP_NAME,
-				new EnumPropertyConverter<MediaType>(MediaType.class)));
-
-		COLUMNS_DEFINITIONS = unmodifiableList(theDefinitions);
-
-	}
-
 	/**
 	 * 
 	 * Default constructor
@@ -72,9 +51,20 @@ public final class CommandDataLoader extends
 	 * @since 1.0.0
 	 * 
 	 */
-	public CommandDataLoader(File aDataSetDirectory) throws FileNotFoundException {
+	public CommandDataLoader(InventoryService anInventoryService,
+			File aDataSetDirectory) throws FileNotFoundException {
 
-		super(aDataSetDirectory, COMMAND_DATA_FILE_NAME, COLUMNS_DEFINITIONS);
+		super(aDataSetDirectory, COMMAND_DATA_FILE_NAME, buildUnmodifiableList(
+				new ColumnDefinition(OCCURRED_PROP_NAME,
+						new DatePropertyConverter()), new ColumnDefinition(
+						CUSTOMER_PROP_NAME, new CustomerPropertyConverter()),
+				new ColumnDefinition(TYPE_PROP_NAME,
+						new EnumPropertyConverter<CommandType>(
+								CommandType.class)), new ColumnDefinition(
+						Command.MOVIE_PROP_NAME, new MoviePropertyConverter(
+								anInventoryService)), new ColumnDefinition(
+						Command.MEDIA_TYPE_PROP_NAME,
+						new EnumPropertyConverter<MediaType>(MediaType.class))));
 
 	}
 

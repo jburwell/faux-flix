@@ -6,5 +6,13 @@
 	<classpathentry kind="lib" path="lib/main/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/main/org.springframework.core-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="tools/testng/testng-5.12.1.jar"/>
+	<classpathentry kind="lib" path="lib/main/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/test/easymock-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/cglib-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/objenesis-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-commons-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-tree-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-util-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

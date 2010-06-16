@@ -28,7 +28,7 @@
  */
 package net.cockamamy.fauxflix.util.mapper;
 
-import static org.testng.Assert.*;
+import static net.cockamamy.fauxflix.util.mapper.MockEnum.*;
 
 import org.testng.annotations.*;
 
@@ -39,81 +39,53 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractPropertyConverterTest<T, P extends PropertyConverter<T>> {
+@Test
+public final class EnumPropertyConverterTest
+		extends
+		AbstractPropertyConverterTest<MockEnum, EnumPropertyConverter<MockEnum>> {
 
-	private static final String CONVERT_VALUE_SUCCESS_PROVIDER = "convert_value_success_provider";
-
-	private static final String CONVERT_VALUE_FAILURE_PROVIDER = "convert_value_failure_provider";
-
-	private P myPropertyConverter = null;
-
-	@BeforeClass
-	public final void setup() {
-
-		this.doBeforeSetup();
-
-		this.myPropertyConverter = this.createPropertyConverter();
-
-		assert this.myPropertyConverter != null;
-		
-	}
-
-	protected void doBeforeSetup() {
-		
-		// Do nothing by default
-		
-	}
-
-	@Test(dataProvider = CONVERT_VALUE_SUCCESS_PROVIDER)
-	public final void testConvertValueSuccess(String aValue, T aResult) {
-
-		assertEquals(this.myPropertyConverter.convertValue(aValue), aResult);
-
-	}
-
-	@Test(dataProvider = CONVERT_VALUE_FAILURE_PROVIDER, expectedExceptions = PropertyConversionException.class)
-	public final void testConvertValueFailure(String aValue) {
-
-		this.myPropertyConverter.convertValue(aValue);
-
-	}
-
-	protected abstract P createPropertyConverter();
-
-	@DataProvider(name = CONVERT_VALUE_SUCCESS_PROVIDER)
-	public final Object[][] provideConvertValueSuccessData() {
-
-		return buildConvertValueSuccessData();
-
-	}
-
-	@DataProvider(name = CONVERT_VALUE_FAILURE_PROVIDER)
-	public final Object[][] provideConvertValueFailureData() {
-
-		return buildConvertValueFailureData();
-
-	}
-
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 * 
+	 * @see net.cockamamy.fauxflix.util.mapper.AbstractPropertyConverterTest#
+	 * buildConvertValueSuccessData()
 	 */
+	@Override
+	protected Object[][] buildConvertValueSuccessData() {
+
+		return new Object[][] {
+
+			{ "FOO", FOO }, { "BAR", BAR },
+			{ "", null}, { null, null}
+
+		};
+
+	}
+
+	@Override
 	protected Object[][] buildConvertValueFailureData() {
-
-		return new Object[][] {};
-
+		
+		return new Object[][] {
+				
+			{ "ZOO" }
+			
+		};
+		
 	}
 
-	/**
+
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 * 
+	 * @see net.cockamamy.fauxflix.util.mapper.AbstractPropertyConverterTest#
+	 * createPropertyConverter()
 	 */
-	protected abstract Object[][] buildConvertValueSuccessData();
+	@Override
+	protected EnumPropertyConverter<MockEnum> createPropertyConverter() {
+
+		return new EnumPropertyConverter<MockEnum>(MockEnum.class);
+
+	}
 
 }

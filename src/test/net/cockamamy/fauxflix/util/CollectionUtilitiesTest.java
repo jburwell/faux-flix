@@ -47,24 +47,25 @@ import org.testng.annotations.*;
 @Test
 public final class CollectionUtilitiesTest {
 
-	private static final String BUILD_UNMODIFIABLE_LIST_PROVIDER = "build_unmodifiable_elements";
-	
+	private static final String BUILD_UNMODIFIABLE_LIST_PROVIDER = "build_unmodifiable_list";
+	private static final String BUILD_UNMODIFIABLE_SET_SUCCESS_PROVIDER = "build_unmodifiable_set_success";
+	private static final String BUILD_UNMODIFIABLE_SET_FAILURE_PROVIDER = "build_unmodifiable_set_failure";
+
 	@Test(dataProvider = BUILD_UNMODIFIABLE_LIST_PROVIDER)
-	public <T> void testBuildUnmodifiableList(T[] theElements, List<T> theExpectedResults)
-	{
-		
+	public <T> void testBuildUnmodifiableList(T[] theElements,
+			List<T> theExpectedResults) {
+
 		assertEquals(buildUnmodifiableList(theElements), theExpectedResults);
-		
+
 	}
-	
+
 	@DataProvider(name = BUILD_UNMODIFIABLE_LIST_PROVIDER)
-	public Object[][] provideBuildUnmodifiableTestData()
-	{
-	
+	public Object[][] provideBuildUnmodifiableTestData() {
+
 		Object[][] theData = new Object[2][2];
-	
+
 		List<String> aList = new ArrayList<String>();
-		
+
 		aList.add("foo");
 		aList.add("bar");
 		aList.add("zoo");
@@ -73,12 +74,61 @@ public final class CollectionUtilitiesTest {
 
 		theData[0][0] = aList.toArray();
 		theData[0][1] = aList;
-		
+
 		theData[1][0] = null;
 		theData[1][1] = emptyList();
-		
+
 		return theData;
-		
+
 	}
-	
+
+	@Test(dataProvider = BUILD_UNMODIFIABLE_SET_SUCCESS_PROVIDER)
+	public <T> void testBuildUnmodifableSet(T[] theElements,
+			Set<T> anExpectedResult) {
+
+		assertEquals(buildUnmodifiableSet(theElements), anExpectedResult);
+
+	}
+
+	@Test(dataProvider = BUILD_UNMODIFIABLE_SET_FAILURE_PROVIDER, expectedExceptions = IllegalStateException.class)
+	public <T> void testBuildUnmodifiableSetFailure(T[] theElements) {
+
+		buildUnmodifiableSet(theElements);
+
+	}
+
+	@DataProvider(name = BUILD_UNMODIFIABLE_SET_SUCCESS_PROVIDER)
+	public Object[][] provideBuildUnmodifableSetSuccessData() {
+
+		Object[][] theData = new Object[2][2];
+
+		Set<String> aSet = new HashSet<String>();
+
+		aSet.add("foo");
+		aSet.add("bar");
+		aSet.add("zoo");
+
+		aSet = unmodifiableSet(aSet);
+
+		theData[0][0] = aSet.toArray();
+		theData[0][1] = aSet;
+
+		theData[1][0] = null;
+		theData[1][1] = emptySet();
+
+		return theData;
+
+	}
+
+	@DataProvider(name = BUILD_UNMODIFIABLE_SET_FAILURE_PROVIDER)
+	public Object[][] provideUnmodifiableSetFailureData() {
+
+		return new Object[][] {
+
+			{ new String[] { "foo", "foo" } }
+
+		};
+
+	}
+
 }

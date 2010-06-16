@@ -1,7 +1,7 @@
 package net.cockamamy.fauxflix.service.inventory;
 
-import static java.util.Collections.*;
 import static net.cockamamy.fauxflix.service.inventory.InventoryRecord.*;
+import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
 
 import java.io.*;
 import java.util.*;
@@ -30,26 +30,10 @@ import net.cockamamy.fauxflix.util.mapper.*;
  * @since 1.0.0
  * 
  */
-public final class InventoryDataLoader extends AbstractDelimitedFileDataLoader<InventoryRecord> {
+public final class InventoryDataLoader extends
+		AbstractDelimitedFileDataLoader<InventoryRecord> {
 
 	private static final String INVENTORY_DATA_FILE_NAME = "inventory.csv";
-
-	private static final List<ColumnDefinition> COLUMN_DEFINITIONS;
-	static {
-
-		List<ColumnDefinition> theDefinitions = new ArrayList<ColumnDefinition>();
-
-		theDefinitions.add(new ColumnDefinition(
-				InventoryRecord.MOVIE_PROP_NAME, new MoviePropertyConverter()));
-		theDefinitions.add(new ColumnDefinition(
-				InventoryRecord.MEDIA_TYPE_PROP_NAME,
-				new EnumPropertyConverter<MediaType>(MediaType.class)));
-		theDefinitions.add(new ColumnDefinition(TOTAL_PROP_NAME,
-				new QuantityPropertyConverter()));
-
-		COLUMN_DEFINITIONS = unmodifiableList(theDefinitions);
-
-	}
 
 	private final InventoryService myInventoryService;
 
@@ -65,7 +49,16 @@ public final class InventoryDataLoader extends AbstractDelimitedFileDataLoader<I
 	public InventoryDataLoader(InventoryService anInventoryService,
 			File aDataSetDirectory) throws FileNotFoundException {
 
-		super(aDataSetDirectory, INVENTORY_DATA_FILE_NAME, COLUMN_DEFINITIONS);
+		super(aDataSetDirectory, INVENTORY_DATA_FILE_NAME,
+				buildUnmodifiableList(new ColumnDefinition(
+						InventoryRecord.MOVIE_PROP_NAME,
+						new MoviePropertyConverter(anInventoryService)),
+						new ColumnDefinition(
+								InventoryRecord.MEDIA_TYPE_PROP_NAME,
+								new EnumPropertyConverter<MediaType>(
+										MediaType.class)),
+						new ColumnDefinition(TOTAL_PROP_NAME,
+								new QuantityPropertyConverter())));
 
 		assert anInventoryService != null;
 
