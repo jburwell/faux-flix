@@ -18,6 +18,16 @@ import net.cockamamy.fauxflix.service.inventory.*;
 final class CustomerAddedEventHandler implements
 		ServiceEventHandler<CustomerAddedEvent> {
 
+	private final RentalService myRentalService;
+
+	CustomerAddedEventHandler(RentalService aRentalService) {
+
+		super();
+
+		this.myRentalService = aRentalService;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -27,9 +37,7 @@ final class CustomerAddedEventHandler implements
 	 */
 	public void handleEvent(CustomerAddedEvent anEvent) {
 
-		RentalService aRentalService = ServiceLocator
-				.findService(RentalService.class);
-		aRentalService.createCustomerQueues(anEvent.getAddedCustomer());
+		this.myRentalService.createCustomerQueues(anEvent.getAddedCustomer());
 
 	}
 

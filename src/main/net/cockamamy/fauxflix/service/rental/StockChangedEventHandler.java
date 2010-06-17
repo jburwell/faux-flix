@@ -18,6 +18,16 @@ import net.cockamamy.fauxflix.service.inventory.*;
 final class StockChangedEventHandler implements
 		ServiceEventHandler<StockChangedEvent> {
 
+	private final RentalService myRentalService;
+
+	StockChangedEventHandler(RentalService aRentalService) {
+
+		super();
+
+		this.myRentalService = aRentalService;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -27,20 +37,19 @@ final class StockChangedEventHandler implements
 	 */
 	public void handleEvent(StockChangedEvent anEvent) {
 
-		RentalService aRentalService = ServiceLocator
-				.findService(RentalService.class);
-
 		switch (anEvent.getChangeType()) {
 
 		case ADDED:
 
-			aRentalService.sendMovie(anEvent.getMovie());
+			this.myRentalService.sendMovie(anEvent.getMovie());
 			break;
 
 		case CREATED:
 
-			aRentalService.createMovieQueues(anEvent.getMovie());
+			this.myRentalService.createMovieQueues(anEvent.getMovie());
 			break;
+
+		// TODO Add a default case to debug log skipped type ...
 
 		}
 

@@ -101,7 +101,8 @@
 		<javac classpathref="compile.classpath"
 			   srcdir="${compile.dir.main}" 
 			   destdir="${classes.dir.main}"
-			   deprecation="true" />
+			   deprecation="true" 
+			   debug="true" />
 
 	</target>
 

@@ -2,7 +2,6 @@ package net.cockamamy.fauxflix;
 
 import static java.lang.String.*;
 import static net.cockamamy.fauxflix.service.ServiceLocator.*;
-import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
 
 import java.io.*;
 import java.util.*;
@@ -24,11 +23,13 @@ import net.cockamamy.fauxflix.simulator.*;
  */
 public final class Application implements Runnable {
 
-	private static final List<Subsystem> SUBSYSTEMS = buildUnmodifiableList(
-			new CustomerSubsystem(), new InventorySubsystem(),
-			new RentalSubsystem());
+	// private static final List<Subsystem> SUBSYSTEMS = buildUnmodifiableList(
+	// new CustomerSubsystem(), new InventorySubsystem(),
+	// new RentalSubsystem());
 
 	private final File myDataSetDirectory;
+
+	private List<Subsystem> mySubsystems;
 
 	private UnitOfWork myUOWProcessor;
 
@@ -59,6 +60,7 @@ public final class Application implements Runnable {
 						.getName());
 
 		this.myDataSetDirectory = aDataSetDirectory;
+		this.mySubsystems = new ArrayList<Subsystem>();
 
 	}
 
@@ -79,7 +81,8 @@ public final class Application implements Runnable {
 
 		} catch (Exception e) {
 
-			// TODO Log the exception ...
+			System.err.println("Simulation failed due to exception " + e);
+			e.printStackTrace();
 
 		} finally {
 
@@ -92,22 +95,23 @@ public final class Application implements Runnable {
 
 	private void start() throws Exception {
 
-		// Map services into the service locator ...
-		for (Subsystem aSubsystem : SUBSYSTEMS) {
+		// Temporary code pre-Spring implementation to isolate the
+		// ServiceLocator dependency and improve the testability of the system.
+		Subsystem aCustomerSubsystem = new CustomerSubsystem();
+		registerServices(aCustomerSubsystem);
+		this.mySubsystems.add(aCustomerSubsystem);
 
-			Map<Class<? extends Service<?>>, ? extends Service<?>> theMappings = aSubsystem
-					.getServiceMappings();
-			for (Map.Entry<Class<? extends Service<?>>, ? extends Service<?>> anEntry : theMappings
-					.entrySet()) {
+		Subsystem anInventorySubsystem = new InventorySubsystem();
+		registerServices(anInventorySubsystem);
+		this.mySubsystems.add(anInventorySubsystem);
 
-				ServiceLocator.registerService(anEntry.getKey(), anEntry
-						.getValue());
+		Subsystem aRentalSubsystem = new RentalSubsystem(
+				findService(InventoryService.class),
+				findService(CustomerService.class));
+		registerServices(aRentalSubsystem);
+		this.mySubsystems.add(aRentalSubsystem);
 
-			}
-
-		}
-
-		for (Subsystem aSubsystem : SUBSYSTEMS) {
+		for (Subsystem aSubsystem : this.mySubsystems) {
 
 			aSubsystem.startService();
 
@@ -130,9 +134,22 @@ public final class Application implements Runnable {
 
 	}
 
+	private void registerServices(Subsystem aSubsystem) {
+
+		Map<Class<? extends Service<?>>, ? extends Service<?>> theMappings = aSubsystem
+				.getServiceMappings();
+		for (Map.Entry<Class<? extends Service<?>>, ? extends Service<?>> anEntry : theMappings
+				.entrySet()) {
+
+			registerService(anEntry.getKey(), anEntry.getValue());
+
+		}
+
+	}
+
 	private void stop() {
 
-		for (Subsystem aSubsystem : SUBSYSTEMS) {
+		for (Subsystem aSubsystem : this.mySubsystems) {
 
 			aSubsystem.stopService();
 
@@ -154,41 +171,33 @@ public final class Application implements Runnable {
 	 */
 	public static void main(String[] theArguments) {
 
-		try {
+		if (theArguments.length != 1) {
 
-			if (theArguments.length != 1) {
-
-				throw new IllegalArgumentException(
-						"A data set directory must be specified as only parameter.");
-
-			}
-
-			File aDataSetDirectory = new File(theArguments[0]);
-
-			if (aDataSetDirectory.exists() == false) {
-
-				throw new IllegalArgumentException(format(
-						"%1$s data set directory does not exist.",
-						aDataSetDirectory.getName()));
-
-			}
-
-			if (aDataSetDirectory.isDirectory() == false) {
-
-				throw new IllegalStateException(format(
-						"%1$s is not a vaid directory", aDataSetDirectory
-								.getName()));
-
-			}
-
-			Application anApplication = new Application(aDataSetDirectory);
-			anApplication.run();
-
-		} catch (Exception e) {
-
-			System.out.println("Simulation failed due to exception " + e);
+			throw new IllegalArgumentException(
+					"A data set directory must be specified as only parameter.");
 
 		}
+
+		File aDataSetDirectory = new File(theArguments[0]);
+
+		if (aDataSetDirectory.exists() == false) {
+
+			throw new IllegalArgumentException(format(
+					"%1$s data set directory does not exist.",
+					aDataSetDirectory.getName()));
+
+		}
+
+		if (aDataSetDirectory.isDirectory() == false) {
+
+			throw new IllegalStateException(
+					format("%1$s is not a vaid directory", aDataSetDirectory
+							.getName()));
+
+		}
+
+		Application anApplication = new Application(aDataSetDirectory);
+		anApplication.run();
 
 	}
 

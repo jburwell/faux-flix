@@ -1,5 +1,6 @@
 package net.cockamamy.fauxflix.service.rental;
 
+import static java.lang.String.*;
 import static java.util.Collections.*;
 
 import java.util.*;
@@ -20,6 +21,28 @@ import net.cockamamy.fauxflix.service.inventory.*;
  */
 public final class RentalSubsystem implements Subsystem {
 
+	private final InventoryService myInventoryService;
+	private final CustomerService myCustomerService;
+	private final RentalServiceImpl myRentalService;
+
+	public RentalSubsystem(InventoryService anInventoryService,
+			CustomerService aCustomerService) {
+
+		super();
+
+		assert anInventoryService != null : format(
+				"%1$s(InventoryService, CustomerService) requires a non-null InventoryService reference.",
+				this.getClass().getName());
+		assert aCustomerService != null : format(
+				"%1$s(InventoryService, CustomerService) requires a non-null CustomerService reference.",
+				this.getClass().getName());
+
+		this.myInventoryService = anInventoryService;
+		this.myCustomerService = aCustomerService;
+		this.myRentalService = new RentalServiceImpl(this.myInventoryService);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -29,7 +52,7 @@ public final class RentalSubsystem implements Subsystem {
 
 		Map<Class<? extends Service<?>>, Service<?>> theMappings = new HashMap<Class<? extends Service<?>>, Service<?>>();
 
-		theMappings.put(RentalService.class, new RentalServiceImpl());
+		theMappings.put(RentalService.class, this.myRentalService);
 
 		return unmodifiableMap(theMappings);
 
@@ -53,13 +76,13 @@ public final class RentalSubsystem implements Subsystem {
 	 */
 	public void startService() {
 
-		InventoryService anInventoryService = ServiceLocator
-				.findService(InventoryService.class);
-		anInventoryService.registerEventHandler(new StockChangedEventHandler());
+		this.myInventoryService
+				.registerEventHandler(new StockChangedEventHandler(
+						this.myRentalService));
 
-		CustomerService aCustomerService = ServiceLocator
-				.findService(CustomerService.class);
-		aCustomerService.registerEventHandler(new CustomerAddedEventHandler());
+		this.myCustomerService
+				.registerEventHandler(new CustomerAddedEventHandler(
+						this.myRentalService));
 
 	}
 

@@ -1,9 +1,9 @@
 package net.cockamamy.fauxflix.service.rental;
 
+import static java.lang.String.*;
+import static java.util.Collections.*;
 import static net.cockamamy.fauxflix.service.customer.MembershipLevel.*;
 import static net.cockamamy.fauxflix.service.rental.RentalChangedEvent.ChangeReason.*;
-import static java.util.Collections.*;
-import static java.lang.String.*;
 
 import java.util.*;
 
@@ -38,11 +38,13 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 
 	}
 
-	private Map<Customer, Map<MediaType, Map<Movie, Rental>>> myRentals;
+	private final InventoryService myInventoryService;
+	
+	private final Map<Customer, Map<MediaType, Map<Movie, Rental>>> myRentals;
 
-	private Map<Customer, Queue<Rental>> myRequestQueues;
+	private final Map<Customer, Queue<Rental>> myRequestQueues;
 
-	private Map<Movie, Queue<Rental>> myDeliveryQueues;
+	private final Map<Movie, Queue<Rental>> myDeliveryQueues;
 
 	/**
 	 * 
@@ -51,10 +53,12 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 * @since 1.0.0
 	 * 
 	 */
-	RentalServiceImpl() {
+	RentalServiceImpl(InventoryService anInventoryService) {
 
 		super();
 
+		this.myInventoryService = anInventoryService;
+		
 		this.myRequestQueues = new HashMap<Customer, Queue<Rental>>();
 		this.myDeliveryQueues = new HashMap<Movie, Queue<Rental>>();
 		this.myRentals = new HashMap<Customer, Map<MediaType, Map<Movie, Rental>>>();
@@ -167,14 +171,11 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 		if (aPermitRentalStrategy.canRent(aMediaType, this.myRentals
 				.get(aCustomer)) == true) {
 
-			InventoryService anInventoryService = ServiceLocator
-					.findService(InventoryService.class);
-
 			this.myRentals.get(aCustomer).get(aMediaType).put(aMovie, aRental);
 
 			this.myDeliveryQueues.get(aMovie).offer(aRental);
 
-			boolean anAllocatedFlag = anInventoryService.allocateStock(aMovie,
+			boolean anAllocatedFlag = this.myInventoryService.allocateStock(aMovie,
 					aMediaType);
 			if (anAllocatedFlag == true) {
 
@@ -211,10 +212,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 		assert aRental != null;
 		assert aReturnDate != null;
 
-		InventoryService anInventoryService = ServiceLocator
-				.findService(InventoryService.class);
-
-		anInventoryService.returnStock(aRental.getMovie(), aRental
+		this.myInventoryService.returnStock(aRental.getMovie(), aRental
 				.getMediaType());
 
 		this.myRentals.get(aRental.getCustomer()).get(aRental.getMediaType())
