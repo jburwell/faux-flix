@@ -1,7 +1,6 @@
 package net.cockamamy.fauxflix.simulator;
 
 import static java.lang.String.*;
-import static net.cockamamy.fauxflix.service.ServiceLocator.*;
 import static net.cockamamy.fauxflix.util.StringUtilities.*;
 
 import java.text.*;
@@ -37,7 +36,8 @@ public final class DefaultUnitOfWork implements UnitOfWork {
 	 * @since 1.0.0
 	 * 
 	 */
-	public DefaultUnitOfWork(Set<Command> theCommands) {
+	public DefaultUnitOfWork(Set<Command> theCommands,
+			RentalService aRentalService) {
 
 		super();
 
@@ -63,7 +63,7 @@ public final class DefaultUnitOfWork implements UnitOfWork {
 
 		this.myDateFactory = DateFactory.getInstance();
 
-		this.myRentalService = findService(RentalService.class);
+		this.myRentalService = aRentalService;
 		this.myRentalService
 				.registerEventHandler(new RentalChangedEventHandler());
 

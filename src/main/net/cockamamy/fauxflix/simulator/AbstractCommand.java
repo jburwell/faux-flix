@@ -8,6 +8,7 @@ import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 
 /**
  * 
@@ -24,6 +25,7 @@ abstract class AbstractCommand implements Command {
 	private final Customer myCustomer;
 	private final MediaType myMediaType;
 	private final Movie myMovie;
+	private final RentalService myRentalService;
 
 	/**
 	 * 
@@ -41,7 +43,7 @@ abstract class AbstractCommand implements Command {
 	 * 
 	 */
 	AbstractCommand(Date anOccurred, Customer aCustomer, Movie aMovie,
-			MediaType aMediaType) {
+			MediaType aMediaType, RentalService aRentalService) {
 
 		super();
 
@@ -60,6 +62,7 @@ abstract class AbstractCommand implements Command {
 		this.myCustomer = aCustomer;
 		this.myMovie = aMovie;
 		this.myMediaType = aMediaType;
+		this.myRentalService = aRentalService;
 
 	}
 
@@ -118,8 +121,13 @@ abstract class AbstractCommand implements Command {
 		return emptySet();
 
 	}
-
 	// END: Command implementation
+
+	protected final RentalService getRentalService() {
+		
+		return this.myRentalService;
+		
+	}
 
 	// BEGIN: Object implementation
 	/*

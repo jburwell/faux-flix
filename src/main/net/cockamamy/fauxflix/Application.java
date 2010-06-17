@@ -124,8 +124,9 @@ public final class Application implements Runnable {
 
 		this.myUOWProcessor = new DefaultUnitOfWork(new CommandDataLoader(
 				findService(InventoryService.class),
-				findService(CustomerService.class), this.myDataSetDirectory)
-				.loadData());
+				findService(CustomerService.class),
+				findService(RentalService.class), this.myDataSetDirectory)
+				.loadData(), findService(RentalService.class));
 
 	}
 

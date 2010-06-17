@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 
 /**
  * 
@@ -30,10 +31,10 @@ public enum CommandType {
 
 		@Override
 		public Command createCommand(Date anOccurred, Customer aCustomer,
-				Movie aMovie, MediaType aMediaType) {
+				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new ReceiveMovieCommand(anOccurred, aCustomer, aMovie,
-					aMediaType);
+					aMediaType, aRentalService);
 
 		}
 
@@ -50,10 +51,10 @@ public enum CommandType {
 
 		@Override
 		public Command createCommand(Date anOccurred, Customer aCustomer,
-				Movie aMovie, MediaType aMediaType) {
+				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new MailMovieCommand(anOccurred, aCustomer, aMovie,
-					aMediaType);
+					aMediaType, aRentalService);
 
 		}
 
@@ -70,10 +71,10 @@ public enum CommandType {
 
 		@Override
 		public Command createCommand(Date anOccurred, Customer aCustomer,
-				Movie aMovie, MediaType aMediaType) {
+				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new RequestMovieCommand(anOccurred, aCustomer, aMovie,
-					aMediaType);
+					aMediaType, aRentalService);
 
 		}
 
@@ -103,6 +104,6 @@ public enum CommandType {
 	 * 
 	 */
 	public abstract Command createCommand(Date anOccurred, Customer aCustomer,
-			Movie aMovie, MediaType aMediaType);
+			Movie aMovie, MediaType aMediaType, RentalService aRentalService);
 
 }

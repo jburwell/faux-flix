@@ -8,6 +8,7 @@ import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 import net.cockamamy.fauxflix.util.csv.*;
 import net.cockamamy.fauxflix.util.loader.*;
 import net.cockamamy.fauxflix.util.mapper.*;
@@ -44,6 +45,8 @@ public final class CommandDataLoader extends
 
 	private static final String COMMAND_DATA_FILE_NAME = "commands.csv";
 
+	private final RentalService myRentalService;
+
 	/**
 	 * 
 	 * Default constructor
@@ -52,8 +55,8 @@ public final class CommandDataLoader extends
 	 * 
 	 */
 	public CommandDataLoader(InventoryService anInventoryService,
-			CustomerService aCustomerService, File aDataSetDirectory)
-			throws FileNotFoundException {
+			CustomerService aCustomerService, RentalService aRentalService,
+			File aDataSetDirectory) throws FileNotFoundException {
 
 		super(aDataSetDirectory, COMMAND_DATA_FILE_NAME, buildUnmodifiableList(
 				new ColumnDefinition(OCCURRED_PROP_NAME,
@@ -62,10 +65,12 @@ public final class CommandDataLoader extends
 								aCustomerService)), new ColumnDefinition(
 						TYPE_PROP_NAME, new EnumPropertyConverter<CommandType>(
 								CommandType.class)), new ColumnDefinition(
-						Command.MOVIE_PROP_NAME, new MoviePropertyConverter(
+						MOVIE_PROP_NAME, new MoviePropertyConverter(
 								anInventoryService)), new ColumnDefinition(
-						Command.MEDIA_TYPE_PROP_NAME,
+						MEDIA_TYPE_PROP_NAME,
 						new EnumPropertyConverter<MediaType>(MediaType.class))));
+
+		this.myRentalService = aRentalService;
 
 	}
 
@@ -99,7 +104,8 @@ public final class CommandDataLoader extends
 		MediaType aMediaType = (MediaType) thePropertyValues
 				.get(Command.MEDIA_TYPE_PROP_NAME);
 
-		return aType.createCommand(anOccurred, aCustomer, aMovie, aMediaType);
+		return aType.createCommand(anOccurred, aCustomer, aMovie, aMediaType,
+				this.myRentalService);
 
 	}
 

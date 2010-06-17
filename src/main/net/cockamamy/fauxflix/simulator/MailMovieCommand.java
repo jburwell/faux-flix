@@ -9,6 +9,7 @@ import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 
 /**
  * 
@@ -42,9 +43,9 @@ final class MailMovieCommand extends AbstractCommand {
 	 * 
 	 */
 	MailMovieCommand(Date anOccurred, Customer aCustomer, Movie aMovie,
-			MediaType aMediaType) {
+			MediaType aMediaType, RentalService aRentalService) {
 
-		super(anOccurred, aCustomer, aMovie, aMediaType);
+		super(anOccurred, aCustomer, aMovie, aMediaType, aRentalService);
 
 		Calendar aCalendar = Calendar.getInstance();
 
@@ -52,7 +53,7 @@ final class MailMovieCommand extends AbstractCommand {
 		aCalendar.add(DAY_OF_WEEK, 1);
 
 		this.myReceiveCommand = new ReceiveMovieCommand(aCalendar.getTime(),
-				this.getCustomer(), this.getMovie(), this.getMediaType());
+				this.getCustomer(), this.getMovie(), this.getMediaType(), aRentalService);
 
 	}
 

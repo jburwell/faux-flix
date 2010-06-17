@@ -5,7 +5,6 @@ import static net.cockamamy.fauxflix.simulator.CommandType.*;
 
 import java.util.*;
 
-import net.cockamamy.fauxflix.service.*;
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
@@ -38,9 +37,9 @@ final class ReceiveMovieCommand extends AbstractCommand {
 	 * 
 	 */
 	public ReceiveMovieCommand(Date anOccurred, Customer aCustomer,
-			Movie aMovie, MediaType aMediaType) {
+			Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
-		super(anOccurred, aCustomer, aMovie, aMediaType);
+		super(anOccurred, aCustomer, aMovie, aMediaType, aRentalService);
 
 	}
 
@@ -51,17 +50,14 @@ final class ReceiveMovieCommand extends AbstractCommand {
 	 */
 	public String execute() {
 
-		RentalService aRentalService = ServiceLocator
-				.findService(RentalService.class);
-
-		Rental aRental = aRentalService.findRental(this.getCustomer(), this
-				.getMovie(), this.getMediaType());
+		Rental aRental = this.getRentalService().findRental(this.getCustomer(),
+				this.getMovie(), this.getMediaType());
 
 		assert aRental != null : format(
 				"No rental found associated with %1$s for %2$s (%3$s)", this
 						.getCustomer(), this.getMovie(), this.getMediaType());
 
-		aRentalService.returnMovie(aRental, this.getOccurred());
+		this.getRentalService().returnMovie(aRental, this.getOccurred());
 
 		return null;
 

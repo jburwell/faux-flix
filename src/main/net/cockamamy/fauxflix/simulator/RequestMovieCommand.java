@@ -4,7 +4,6 @@ import static net.cockamamy.fauxflix.simulator.CommandType.*;
 
 import java.util.*;
 
-import net.cockamamy.fauxflix.service.*;
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
@@ -37,10 +36,10 @@ final class RequestMovieCommand extends AbstractCommand {
 	 * 
 	 */
 	RequestMovieCommand(Date anOccurred, Customer aCustomer, Movie aMovie,
-			MediaType aMediaType) {
+			MediaType aMediaType, RentalService aRentalService) {
 
-		super(anOccurred, aCustomer, aMovie, aMediaType);
-
+		super(anOccurred, aCustomer, aMovie, aMediaType, aRentalService);
+		
 	}
 
 	/*
@@ -50,10 +49,7 @@ final class RequestMovieCommand extends AbstractCommand {
 	 */
 	public String execute() {
 
-		RentalService aRentalService = ServiceLocator
-				.findService(RentalService.class);
-
-		aRentalService.rentMovie(this.getCustomer(), this.getMovie(), this
+		this.getRentalService().rentMovie(this.getCustomer(), this.getMovie(), this
 				.getMediaType(), this.getOccurred());
 
 		return null;
