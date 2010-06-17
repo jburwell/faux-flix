@@ -53,7 +53,7 @@ public final class DefaultUnitOfWork implements UnitOfWork {
 
 		}
 
-		assert (this.myCommands.size() == theCommands.size());
+		assert this.myCommands.size() == theCommands.size();
 
 		for (Command aCommand : theCommands) {
 
@@ -112,7 +112,7 @@ public final class DefaultUnitOfWork implements UnitOfWork {
 
 		Calendar aCalendar = Calendar.getInstance();
 		aCalendar.setTime(DateFactory.getInstance().getToday());
-		aCalendar.roll(Calendar.DAY_OF_MONTH, -2);
+		aCalendar.add(Calendar.DAY_OF_MONTH, -2);
 		Date aPastDueDate = aCalendar.getTime();
 
 		Set<Rental> theRentals = this.myRentalService.findAllRentals();
