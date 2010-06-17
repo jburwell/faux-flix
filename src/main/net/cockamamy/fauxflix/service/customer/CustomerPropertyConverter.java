@@ -1,6 +1,5 @@
 package net.cockamamy.fauxflix.service.customer;
 
-import static net.cockamamy.fauxflix.service.ServiceLocator.*;
 import static net.cockamamy.fauxflix.util.StringUtilities.*;
 import net.cockamamy.fauxflix.util.mapper.*;
 
@@ -15,6 +14,16 @@ import net.cockamamy.fauxflix.util.mapper.*;
  */
 public final class CustomerPropertyConverter implements
 		PropertyConverter<Customer> {
+
+	private CustomerService myCustomerService;
+
+	public CustomerPropertyConverter(CustomerService aCustomerService) {
+		
+		super();
+		
+		this.myCustomerService = aCustomerService; 
+		
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -27,10 +36,10 @@ public final class CustomerPropertyConverter implements
 
 		Customer aCustomer = null;
 
+		// TODO Push this rule down into the service ...
 		if (isNotBlank(aValue) == true) {
 
-			CustomerService aCustomerService = findService(CustomerService.class);
-			aCustomer = aCustomerService.findCustomer(aValue);
+			aCustomer = this.myCustomerService.findCustomer(aValue);
 
 		}
 

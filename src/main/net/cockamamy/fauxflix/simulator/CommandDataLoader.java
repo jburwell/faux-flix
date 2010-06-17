@@ -52,14 +52,15 @@ public final class CommandDataLoader extends
 	 * 
 	 */
 	public CommandDataLoader(InventoryService anInventoryService,
-			File aDataSetDirectory) throws FileNotFoundException {
+			CustomerService aCustomerService, File aDataSetDirectory)
+			throws FileNotFoundException {
 
 		super(aDataSetDirectory, COMMAND_DATA_FILE_NAME, buildUnmodifiableList(
 				new ColumnDefinition(OCCURRED_PROP_NAME,
 						new DatePropertyConverter()), new ColumnDefinition(
-						CUSTOMER_PROP_NAME, new CustomerPropertyConverter()),
-				new ColumnDefinition(TYPE_PROP_NAME,
-						new EnumPropertyConverter<CommandType>(
+						CUSTOMER_PROP_NAME, new CustomerPropertyConverter(
+								aCustomerService)), new ColumnDefinition(
+						TYPE_PROP_NAME, new EnumPropertyConverter<CommandType>(
 								CommandType.class)), new ColumnDefinition(
 						Command.MOVIE_PROP_NAME, new MoviePropertyConverter(
 								anInventoryService)), new ColumnDefinition(

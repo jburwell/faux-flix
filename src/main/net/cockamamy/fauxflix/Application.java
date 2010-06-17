@@ -123,7 +123,8 @@ public final class Application implements Runnable {
 				this.myDataSetDirectory).loadData();
 
 		this.myUOWProcessor = new DefaultUnitOfWork(new CommandDataLoader(
-				findService(InventoryService.class), this.myDataSetDirectory)
+				findService(InventoryService.class),
+				findService(CustomerService.class), this.myDataSetDirectory)
 				.loadData());
 
 	}
