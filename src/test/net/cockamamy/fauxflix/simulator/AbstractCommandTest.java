@@ -28,7 +28,15 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
+import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
+import static org.easymock.EasyMock.*;
 import static org.testng.Assert.*;
+
+import java.util.*;
+
+import net.cockamamy.fauxflix.service.customer.*;
+import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 
 import org.testng.annotations.*;
 
@@ -39,27 +47,41 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest<C extends Command> {
+public abstract class AbstractCommandTest {
 
-	private static final String COMMAND_PROVIDER = "commands";
+	@Test
+	public final void testExecute() {
 
-	@Test(dataProvider = COMMAND_PROVIDER)
-	public final void testExecute(C aCommand, String anExpectedResult) {
+		Date anOccurred = new Date();
+
+		Customer aCustomer = createMock(Customer.class);
+		Movie aMovie = createMock(Movie.class);
+
+		Rental aRental = createMock(Rental.class);
+		RentalService aRentalService = createMock(RentalService.class);
+
+		this.configureRentalService(aRentalService, aCustomer, aMovie, aRental,
+				anOccurred);
+
+		replay(aCustomer);
+		replay(aMovie);
+		replay(aRental);
+		replay(aRentalService);
+
+		Command aCommand = this.getCommandType().createCommand(anOccurred,
+				aCustomer, aMovie, DVD, aRentalService);
 
 		assertNotNull(aCommand);
 		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), anExpectedResult);
+		assertEquals(aCommand.execute(), this.getExpectedResult());
 
 	}
 
-	@DataProvider(name = COMMAND_PROVIDER)
-	public Object[][] provideCommands() {
+	protected abstract String getExpectedResult();
 
-		return this.buildCommands();
-
-	}
-
-	protected abstract Object[][] buildCommands();
+	protected abstract void configureRentalService(
+			RentalService aRentalService, Customer aCustomer, Movie aMovie,
+			Rental aRental, Date anOccurred);
 
 	protected abstract CommandType getCommandType();
 

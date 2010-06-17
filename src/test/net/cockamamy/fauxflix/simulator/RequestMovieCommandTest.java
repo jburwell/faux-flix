@@ -28,17 +28,17 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
+import static org.easymock.EasyMock.*;
 import static net.cockamamy.fauxflix.simulator.CommandType.*;
 import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
-import static org.easymock.EasyMock.*;
 
 import java.util.*;
-
-import org.testng.annotations.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+
+import org.testng.annotations.*;
 
 /**
  * 
@@ -48,20 +48,7 @@ import net.cockamamy.fauxflix.service.rental.*;
  * 
  */
 @Test
-public final class ReceiveMovieCommandTest extends AbstractCommandTest {
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
-	 */
-	@Override
-	protected CommandType getCommandType() {
-
-		return RECEIVES;
-
-	}
+public final class RequestMovieCommandTest extends AbstractCommandTest {
 
 	/*
 	 * (non-Javadoc)
@@ -71,16 +58,28 @@ public final class ReceiveMovieCommandTest extends AbstractCommandTest {
 	 * (net.cockamamy.fauxflix.service.rental.RentalService,
 	 * net.cockamamy.fauxflix.service.customer.Customer,
 	 * net.cockamamy.fauxflix.service.inventory.Movie,
-	 * net.cockamamy.fauxflix.service.rental.Rental)
+	 * net.cockamamy.fauxflix.service.rental.Rental, java.util.Date)
 	 */
 	@Override
 	protected void configureRentalService(RentalService aRentalService,
 			Customer aCustomer, Movie aMovie, Rental aRental, Date anOccurred) {
 
-		expect(aRentalService.findRental(aCustomer, aMovie, DVD)).andReturn(
-				aRental);
-		aRentalService.returnMovie(aRental, anOccurred);
+		expect(aRentalService.rentMovie(aCustomer, aMovie, DVD, anOccurred))
+				.andReturn(aRental);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
+	 */
+	@Override
+	protected CommandType getCommandType() {
+		
+		return REQUESTS;
+		
 	}
 
 	/*
@@ -91,9 +90,8 @@ public final class ReceiveMovieCommandTest extends AbstractCommandTest {
 	 */
 	@Override
 	protected String getExpectedResult() {
-		
+		// TODO Auto-generated method stub
 		return null;
-		
 	}
 
 }
