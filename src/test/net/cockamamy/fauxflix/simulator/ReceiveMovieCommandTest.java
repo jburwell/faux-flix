@@ -28,9 +28,17 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static org.testng.Assert.*;
+import static net.cockamamy.fauxflix.simulator.CommandType.*;
+import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
+import static org.easymock.EasyMock.*;
+
+import java.util.*;
 
 import org.testng.annotations.*;
+
+import net.cockamamy.fauxflix.service.customer.*;
+import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.service.rental.*;
 
 /**
  * 
@@ -39,28 +47,54 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest<C extends Command> {
+@Test
+public final class ReceiveMovieCommandTest extends
+		AbstractCommandTest<ReceiveMovieCommand> {
 
-	private static final String COMMAND_PROVIDER = "commands";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.cockamamy.fauxflix.simulator.AbstractCommandTest#buildCommands()
+	 */
+	@Override
+	protected Object[][] buildCommands() {
 
-	@Test(dataProvider = COMMAND_PROVIDER)
-	public final void testExecute(C aCommand, String anExpectedResult) {
+		Date aReturnDate = new Date();
 
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), anExpectedResult);
+		Customer aCustomer = createMock(Customer.class);
+		Movie aMovie = createMock(Movie.class);
+
+		Rental aRental = createMock(Rental.class);
+		RentalService aRentalService = createMock(RentalService.class);
+		expect(aRentalService.findRental(aCustomer, aMovie, DVD)).andReturn(
+				aRental);
+		aRentalService.returnMovie(aRental, aReturnDate);
+
+		replay(aCustomer);
+		replay(aMovie);
+		replay(aRental);
+		replay(aRentalService);
+
+		return new Object[][] {
+
+			{ this.getCommandType().createCommand(aReturnDate, aCustomer,
+				aMovie, DVD, aRentalService), null }
+
+		};
 
 	}
 
-	@DataProvider(name = COMMAND_PROVIDER)
-	public Object[][] provideCommands() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
+	 */
+	@Override
+	protected CommandType getCommandType() {
 
-		return this.buildCommands();
+		return RECEIVES;
 
 	}
-
-	protected abstract Object[][] buildCommands();
-
-	protected abstract CommandType getCommandType();
 
 }
