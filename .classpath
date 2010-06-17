@@ -10,9 +10,6 @@
 	<classpathentry kind="lib" path="lib/test/easymock-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/cglib-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/objenesis-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/test/asm-commons-3.2.jar"/>
-	<classpathentry kind="lib" path="lib/test/asm-tree-3.2.jar"/>
-	<classpathentry kind="lib" path="lib/test/asm-util-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/asm-3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

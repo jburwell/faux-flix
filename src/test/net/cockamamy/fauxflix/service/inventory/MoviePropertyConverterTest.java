@@ -30,6 +30,7 @@ package net.cockamamy.fauxflix.service.inventory;
 
 import static org.easymock.EasyMock.*;
 import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
+import static net.cockamamy.fauxflix.util.StringUtilities.*;
 
 import java.util.*;
 
@@ -71,7 +72,7 @@ public final class MoviePropertyConverterTest extends
 	@Override
 	protected Object[][] buildConvertValueSuccessData() {
 
-		Object[][] theData = new Object[TITLES.size()][2];
+		Object[][] theData = new Object[TITLES.size() + 2][2];
 		
 		int i = 0;
 		for (String aTitle : TITLES) {
@@ -79,14 +80,16 @@ public final class MoviePropertyConverterTest extends
 			Movie aMovie = new MovieImpl(aTitle);
 			
 			theData[i] = new Object[] { aTitle, aMovie };
-			expect(this.myInventoryService.addMovie(aTitle)).andReturn(
-					aMovie);
 			expect(this.myInventoryService.findMovie(aTitle)).andReturn(
 					aMovie);
+			
+			i++;
 
 		}
 
-		expectLastCall().times(TITLES.size());
+		theData[i] = new Object[] { null, null };
+		theData[++i] = new Object[] { BLANK_STRING, null };
+		
 		replay(this.myInventoryService);
 
 		return theData;

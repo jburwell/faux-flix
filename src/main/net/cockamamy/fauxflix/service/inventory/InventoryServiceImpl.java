@@ -67,6 +67,8 @@ final class InventoryServiceImpl extends AbstractService<StockChangedEvent>
 	 */
 	public Movie findMovie(String aTitle) {
 
+		// TODO Implement the null object pattern -> Nullable interface
+		// TODO Create DefaultValueMap
 		return this.myMovies.get(aTitle);
 
 	}

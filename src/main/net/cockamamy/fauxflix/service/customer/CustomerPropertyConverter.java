@@ -15,7 +15,7 @@ import net.cockamamy.fauxflix.util.mapper.*;
  */
 public final class CustomerPropertyConverter implements
 		PropertyConverter<Customer> {
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

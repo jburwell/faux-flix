@@ -41,12 +41,15 @@ public class MoviePropertyConverter implements PropertyConverter<Movie> {
 
 		Movie aMovie = null;
 
+		// TODO Push this rule into the service ...
 		if (isNotBlank(aValue) == true) {
 
 			aMovie = this.myInventoryService.findMovie(aValue);
+			
+			// TODO What should we do if no movie is found?
 
 		}
-
+		
 		return aMovie;
 
 	}
