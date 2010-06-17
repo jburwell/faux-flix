@@ -25,6 +25,8 @@ import net.cockamamy.fauxflix.service.rental.*;
  */
 final class MailMovieCommand extends AbstractCommand {
 
+	static final String MESSAGE_TEMPLATE = "%1$s mails back \"%2$s\" (%3$s)";
+	
 	private final Command myReceiveCommand;
 
 	/**
@@ -64,7 +66,7 @@ final class MailMovieCommand extends AbstractCommand {
 	 */
 	public String execute() {
 
-		return format("%1$s mails back \"%2$s\" (%3$s)", this.getCustomer()
+		return format(MESSAGE_TEMPLATE, this.getCustomer()
 				.getName(), this.getMovie().getTitle(), this.getMediaType()
 				.name().toLowerCase());
 

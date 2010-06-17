@@ -67,32 +67,25 @@ public final class ReceiveMovieCommandTest extends AbstractCommandTest {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#configureRentalService
-	 * (net.cockamamy.fauxflix.service.rental.RentalService,
-	 * net.cockamamy.fauxflix.service.customer.Customer,
-	 * net.cockamamy.fauxflix.service.inventory.Movie,
-	 * net.cockamamy.fauxflix.service.rental.Rental)
-	 */
-	@Override
-	protected void configureRentalService(RentalService aRentalService,
-			Customer aCustomer, Movie aMovie, Rental aRental, Date anOccurred) {
-
-		expect(aRentalService.findRental(aCustomer, aMovie, DVD)).andReturn(
-				aRental);
-		aRentalService.returnMovie(aRental, anOccurred);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getExpectedResult()
 	 */
 	@Override
 	protected String getExpectedResult() {
 		
 		return null;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.cockamamy.fauxflix.simulator.AbstractCommandTest#configure(net.cockamamy.fauxflix.service.customer.Customer, net.cockamamy.fauxflix.service.inventory.Movie, net.cockamamy.fauxflix.service.rental.Rental, net.cockamamy.fauxflix.service.rental.RentalService, java.util.Date)
+	 */
+	@Override
+	protected void configure(Customer aCustomer, Movie aMovie, Rental aRental,
+			RentalService aRentalService, Date anOccurred) {
+		
+		expect(aRentalService.findRental(aCustomer, aMovie, DVD)).andReturn(
+				aRental);
+		aRentalService.returnMovie(aRental, anOccurred);
 		
 	}
 

@@ -54,32 +54,13 @@ public final class RequestMovieCommandTest extends AbstractCommandTest {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#configureRentalService
-	 * (net.cockamamy.fauxflix.service.rental.RentalService,
-	 * net.cockamamy.fauxflix.service.customer.Customer,
-	 * net.cockamamy.fauxflix.service.inventory.Movie,
-	 * net.cockamamy.fauxflix.service.rental.Rental, java.util.Date)
-	 */
-	@Override
-	protected void configureRentalService(RentalService aRentalService,
-			Customer aCustomer, Movie aMovie, Rental aRental, Date anOccurred) {
-
-		expect(aRentalService.rentMovie(aCustomer, aMovie, DVD, anOccurred))
-				.andReturn(aRental);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
 	 */
 	@Override
 	protected CommandType getCommandType() {
-		
+
 		return REQUESTS;
-		
+
 	}
 
 	/*
@@ -90,8 +71,28 @@ public final class RequestMovieCommandTest extends AbstractCommandTest {
 	 */
 	@Override
 	protected String getExpectedResult() {
-		// TODO Auto-generated method stub
+
 		return null;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#configure(net.cockamamy
+	 * .fauxflix.service.customer.Customer,
+	 * net.cockamamy.fauxflix.service.inventory.Movie,
+	 * net.cockamamy.fauxflix.service.rental.Rental,
+	 * net.cockamamy.fauxflix.service.rental.RentalService, java.util.Date)
+	 */
+	@Override
+	protected void configure(Customer aCustomer, Movie aMovie, Rental aRental,
+			RentalService aRentalService, Date anOccurred) {
+
+		expect(aRentalService.rentMovie(aCustomer, aMovie, DVD, anOccurred))
+				.andReturn(aRental);
+
 	}
 
 }

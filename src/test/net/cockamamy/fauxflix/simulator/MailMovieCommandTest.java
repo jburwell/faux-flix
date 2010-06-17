@@ -28,17 +28,18 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
+import static java.lang.String.*;
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
+import static net.cockamamy.fauxflix.simulator.CommandType.*;
+import static net.cockamamy.fauxflix.simulator.MailMovieCommand.*;
 
 import java.util.*;
+
+import org.testng.annotations.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
 
 /**
  * 
@@ -47,48 +48,50 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest {
+@Test
+public final class MailMovieCommandTest extends AbstractCommandTest {
 
-	/**
+	private static final String CUSTOMER_NAME = "Joe";
+	private static final String TITLE = "The Usual Suspects";
+
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @since 1.0.0
-	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
 	 */
-	protected static final MediaType MEDIA_TYPE = DVD;
+	@Override
+	protected CommandType getCommandType() {
 
-	@Test
-	public final void testExecute() {
-
-		Date anOccurred = new Date();
-
-		// Create mocks ...
-		Customer aCustomer = createMock(Customer.class);
-		Movie aMovie = createMock(Movie.class);
-		Rental aRental = createMock(Rental.class);
-		RentalService aRentalService = createMock(RentalService.class);
-
-		// Configure mocks ...
-		this.configure(aCustomer, aMovie, aRental, aRentalService, anOccurred);
-
-		replay(aCustomer);
-		replay(aMovie);
-		replay(aRental);
-		replay(aRentalService);
-
-		Command aCommand = this.getCommandType().createCommand(anOccurred,
-				aCustomer, aMovie, MEDIA_TYPE, aRentalService);
-
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), this.getExpectedResult());
+		return MAILS;
 
 	}
 
-	protected abstract void configure(Customer aCustomer, Movie aMovie,
-			Rental aRental, RentalService aRentalService, Date anOccurred);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getExpectedResult()
+	 */
+	@Override
+	protected String getExpectedResult() {
 
-	protected abstract String getExpectedResult();
+		return format(MESSAGE_TEMPLATE, CUSTOMER_NAME, TITLE, MEDIA_TYPE.name()
+				.toLowerCase());
 
-	protected abstract CommandType getCommandType();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.cockamamy.fauxflix.simulator.AbstractCommandTest#configure(net.cockamamy.fauxflix.service.customer.Customer, net.cockamamy.fauxflix.service.inventory.Movie, net.cockamamy.fauxflix.service.rental.Rental, net.cockamamy.fauxflix.service.rental.RentalService, java.util.Date)
+	 */
+	@Override
+	protected void configure(Customer aCustomer, Movie aMovie, Rental aRental,
+			RentalService aRentalService, Date anOccurred) {
+		
+		expect(aCustomer.getName()).andReturn(CUSTOMER_NAME);
+		expect(aMovie.getTitle()).andReturn(TITLE);
+		
+	}
 
 }
