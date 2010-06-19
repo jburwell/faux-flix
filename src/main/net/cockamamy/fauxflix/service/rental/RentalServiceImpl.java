@@ -39,7 +39,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	}
 
 	private final InventoryService myInventoryService;
-	
+
 	private final Map<Customer, Map<MediaType, Map<Movie, Rental>>> myRentals;
 
 	private final Map<Customer, Queue<Rental>> myRequestQueues;
@@ -57,8 +57,12 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 
 		super();
 
+		assert anInventoryService != null : format(
+				"%1$s(InventoryService) requires a non-null %2$s reference.",
+				this.getClass().getName(), InventoryService.class.getName());
+
 		this.myInventoryService = anInventoryService;
-		
+
 		this.myRequestQueues = new HashMap<Customer, Queue<Rental>>();
 		this.myDeliveryQueues = new HashMap<Movie, Queue<Rental>>();
 		this.myRentals = new HashMap<Customer, Map<MediaType, Map<Movie, Rental>>>();
@@ -77,9 +81,9 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	public Rental findRental(Customer aCustomer, Movie aMovie,
 			MediaType aMediaType) {
 
-		assert aCustomer != null;
-		assert aMovie != null;
-		assert aMediaType != null;
+		assert aCustomer != null : format("findRental(Movie, MediaType) requires a non-null Customer.");
+		assert aMovie != null : format("findRental(Movie, MediaType) requires a non-null Movie.");
+		assert aMediaType != null : format("findRental(Movie, MediaType) requires a non-null MediaType.");
 
 		return this.myRentals.get(aCustomer).get(aMediaType).get(aMovie);
 
@@ -93,6 +97,8 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 * .fauxflix.service.customer.Customer)
 	 */
 	public Set<Rental> findRentals(Customer aCustomer) {
+
+		assert aCustomer != null : "findRentals(Cusomter) requires a non-null Customer";
 
 		Map<MediaType, Map<Movie, Rental>> theRentalMap = this.myRentals
 				.get(aCustomer);
@@ -157,7 +163,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 */
 	public Rental rentMovie(Customer aCustomer, Movie aMovie,
 			MediaType aMediaType, Date aRequestDate) {
-
+		
 		Rental aRental = new RentalImpl(aCustomer, aMovie, aMediaType,
 				aRequestDate);
 
@@ -175,8 +181,8 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 
 			this.myDeliveryQueues.get(aMovie).offer(aRental);
 
-			boolean anAllocatedFlag = this.myInventoryService.allocateStock(aMovie,
-					aMediaType);
+			boolean anAllocatedFlag = this.myInventoryService.allocateStock(
+					aMovie, aMediaType);
 			if (anAllocatedFlag == true) {
 
 				this.sendMovie(aMovie);
@@ -355,7 +361,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 * .fauxflix.service.inventory.Movie)
 	 */
 	public Rental sendMovie(Movie aMovie) {
-
+		
 		Rental aRental = this.myDeliveryQueues.get(aMovie).poll();
 
 		if (aRental != null) {
