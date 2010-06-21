@@ -26,69 +26,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package net.cockamamy.fauxflix.simulator;
-
-import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
-import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
-
-import java.util.*;
-
-import net.cockamamy.fauxflix.service.customer.*;
-import net.cockamamy.fauxflix.service.inventory.*;
-import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
+package net.cockamamy.fauxflix.util.uow;
 
 /**
- * 
+ *
  * @author jburwell
- * 
+ *
  * @since 1.0.0
- * 
+ *
  */
-public abstract class AbstractCommandTest {
+public enum Severity {
 
-	/**
-	 * 
-	 * @since 1.0.0
-	 * 
-	 */
-	protected static final MediaType MEDIA_TYPE = DVD;
-
-	@Test
-	public final void testExecute() {
-
-		Date anOccurred = new Date();
-
-		// Create mocks ...
-		Customer aCustomer = createMock(Customer.class);
-		Movie aMovie = createMock(Movie.class);
-		Rental aRental = createMock(Rental.class);
-		RentalService aRentalService = createMock(RentalService.class);
-
-		// Configure mocks ...
-		this.configure(aCustomer, aMovie, aRental, aRentalService, anOccurred);
-
-		replay(aCustomer);
-		replay(aMovie);
-		replay(aRental);
-		replay(aRentalService);
-
-		SimulatorCommand aCommand = this.getCommandType().createCommand(anOccurred,
-				aCustomer, aMovie, MEDIA_TYPE, aRentalService);
-
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), this.getExpectedResult());
-
-	}
-
-	protected abstract void configure(Customer aCustomer, Movie aMovie,
-			Rental aRental, RentalService aRentalService, Date anOccurred);
-
-	protected abstract String getExpectedResult();
-
-	protected abstract SimulatorCommandType getCommandType();
-
+	INFO,
+	
+	WARNING,
+	
+	ERROR;
+	
 }

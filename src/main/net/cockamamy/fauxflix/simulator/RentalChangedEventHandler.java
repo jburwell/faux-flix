@@ -1,7 +1,6 @@
 package net.cockamamy.fauxflix.simulator;
 
 import static java.lang.String.*;
-import static net.cockamamy.fauxflix.service.ServiceLocator.*;
 import static net.cockamamy.fauxflix.util.StringUtilities.*;
 import net.cockamamy.fauxflix.service.*;
 import net.cockamamy.fauxflix.service.rental.*;
@@ -20,6 +19,16 @@ import net.cockamamy.fauxflix.service.rental.*;
 final class RentalChangedEventHandler implements
 		ServiceEventHandler<RentalChangedEvent> {
 
+	private final RentalService myRentalService;
+
+	public RentalChangedEventHandler(RentalService aRentalService) {
+		
+		super();
+		
+		this.myRentalService = aRentalService;
+		
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -62,18 +71,15 @@ final class RentalChangedEventHandler implements
 					.getCustomer().getName(), theChangedRental.getMovie()
 					.getTitle(), theChangedRental.getMediaType().name()
 					.toLowerCase());
-
 			break;
 
 		case RETURNED:
-
-			RentalService aRentalService = findService(RentalService.class);
 			aMessage = format(
 					"%1$s's \"%2$s\" returned (%3$s) to stock; %1$s has %4$s movies still rented.",
 					theChangedRental.getCustomer().getName(), theChangedRental
 							.getMovie().getTitle(), theChangedRental
 							.getMediaType().name().toLowerCase(),
-					aRentalService.findRentals(theChangedRental.getCustomer())
+					this.myRentalService.findRentals(theChangedRental.getCustomer())
 							.size());
 
 			break;

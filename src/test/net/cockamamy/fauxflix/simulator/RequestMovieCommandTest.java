@@ -28,9 +28,9 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static org.easymock.EasyMock.*;
-import static net.cockamamy.fauxflix.simulator.CommandType.*;
 import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
+import static net.cockamamy.fauxflix.simulator.SimulatorCommandType.*;
+import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
@@ -57,7 +57,7 @@ public final class RequestMovieCommandTest extends AbstractCommandTest {
 	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
 	 */
 	@Override
-	protected CommandType getCommandType() {
+	protected SimulatorCommandType getCommandType() {
 
 		return REQUESTS;
 

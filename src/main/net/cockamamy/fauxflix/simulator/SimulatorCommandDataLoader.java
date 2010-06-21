@@ -1,6 +1,6 @@
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.simulator.Command.*;
+import static net.cockamamy.fauxflix.simulator.SimulatorCommand.*;
 import static net.cockamamy.fauxflix.util.CollectionUtilities.*;
 
 import java.io.*;
@@ -25,7 +25,7 @@ import net.cockamamy.fauxflix.util.mapper.*;
  * Customer Name
  * </ul>
  * <ul>
- * {@link CommandType}
+ * {@link SimulatorCommandType}
  * </ul>
  * <ul>
  * Movie Title
@@ -40,8 +40,8 @@ import net.cockamamy.fauxflix.util.mapper.*;
  * @since 1.0.0
  * 
  */
-public final class CommandDataLoader extends
-		AbstractDelimitedFileDataLoader<Command> {
+public final class SimulatorCommandDataLoader extends
+		AbstractDelimitedFileDataLoader<SimulatorCommand> {
 
 	private static final String COMMAND_DATA_FILE_NAME = "commands.csv";
 
@@ -54,7 +54,7 @@ public final class CommandDataLoader extends
 	 * @since 1.0.0
 	 * 
 	 */
-	public CommandDataLoader(InventoryService anInventoryService,
+	public SimulatorCommandDataLoader(InventoryService anInventoryService,
 			CustomerService aCustomerService, RentalService aRentalService,
 			File aDataSetDirectory) throws FileNotFoundException {
 
@@ -63,8 +63,8 @@ public final class CommandDataLoader extends
 						new DatePropertyConverter()), new ColumnDefinition(
 						CUSTOMER_PROP_NAME, new CustomerPropertyConverter(
 								aCustomerService)), new ColumnDefinition(
-						TYPE_PROP_NAME, new EnumPropertyConverter<CommandType>(
-								CommandType.class)), new ColumnDefinition(
+						TYPE_PROP_NAME, new EnumPropertyConverter<SimulatorCommandType>(
+								SimulatorCommandType.class)), new ColumnDefinition(
 						MOVIE_PROP_NAME, new MoviePropertyConverter(
 								anInventoryService)), new ColumnDefinition(
 						MEDIA_TYPE_PROP_NAME,
@@ -92,17 +92,17 @@ public final class CommandDataLoader extends
 	 * @see
 	 * net.cockamamy.fauxflix.util.csv.ObjectFactory#createObject(java.util.Map)
 	 */
-	public Command createObject(Map<String, Object> thePropertyValues) {
+	public SimulatorCommand createObject(Map<String, Object> thePropertyValues) {
 
 		assert thePropertyValues != null;
 
-		CommandType aType = (CommandType) thePropertyValues.get(TYPE_PROP_NAME);
+		SimulatorCommandType aType = (SimulatorCommandType) thePropertyValues.get(TYPE_PROP_NAME);
 		Date anOccurred = (Date) thePropertyValues.get(OCCURRED_PROP_NAME);
 		Customer aCustomer = (Customer) thePropertyValues
 				.get(CUSTOMER_PROP_NAME);
-		Movie aMovie = (Movie) thePropertyValues.get(Command.MOVIE_PROP_NAME);
+		Movie aMovie = (Movie) thePropertyValues.get(MOVIE_PROP_NAME);
 		MediaType aMediaType = (MediaType) thePropertyValues
-				.get(Command.MEDIA_TYPE_PROP_NAME);
+				.get(MEDIA_TYPE_PROP_NAME);
 
 		return aType.createCommand(anOccurred, aCustomer, aMovie, aMediaType,
 				this.myRentalService);

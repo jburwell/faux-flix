@@ -163,7 +163,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 */
 	public Rental rentMovie(Customer aCustomer, Movie aMovie,
 			MediaType aMediaType, Date aRequestDate) {
-		
+
 		Rental aRental = new RentalImpl(aCustomer, aMovie, aMediaType,
 				aRequestDate);
 
@@ -361,7 +361,7 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 	 * .fauxflix.service.inventory.Movie)
 	 */
 	public Rental sendMovie(Movie aMovie) {
-		
+
 		Rental aRental = this.myDeliveryQueues.get(aMovie).poll();
 
 		if (aRental != null) {
@@ -415,6 +415,47 @@ final class RentalServiceImpl extends AbstractService<RentalChangedEvent>
 				"A delivery queue already exists for %1$s", aMovie.getTitle());
 
 		this.myDeliveryQueues.put(aMovie, new LinkedList<Rental>());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.cockamamy.fauxflix.service.rental.RentalService#processOverdueRentals
+	 * (java.util.Date)
+	 */
+	public Set<Rental> determineOverdueRentals(Date aDueDate) {
+
+		Date aPastDueDate = this.calculatePastDueDate(aDueDate);
+
+		Set<Rental> theRentals = this.findAllRentals();
+		Set<Rental> theOverdueRentals = new HashSet<Rental>();
+		for (Rental aRental : theRentals) {
+
+			if (aRental.getSentDate() != null
+					&& aRental.getSentDate().before(aPastDueDate) == true) {
+
+				theOverdueRentals.add(aRental);
+				// System.out.println(format("%1$s's rental of %2$s is past due.",
+				// aRental.getCustomer().getName(), aRental.getMovie()
+				// .getTitle()));
+
+			}
+
+		}
+
+		return unmodifiableSet(theOverdueRentals);
+
+	}
+	
+	private Date calculatePastDueDate(Date aDueDate) {
+		
+		Calendar aCalendar = Calendar.getInstance();
+		aCalendar.setTime(aDueDate);
+		aCalendar.add(Calendar.DAY_OF_MONTH, -2);
+		
+		return aCalendar.getTime();
 
 	}
 

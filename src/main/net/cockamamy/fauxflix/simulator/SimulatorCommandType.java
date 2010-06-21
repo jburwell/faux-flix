@@ -5,6 +5,7 @@ import java.util.*;
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -18,7 +19,7 @@ import net.cockamamy.fauxflix.service.rental.*;
  * @since 1.0.0
  * 
  */
-public enum CommandType {
+public enum SimulatorCommandType {
 
 	/**
 	 * 
@@ -30,7 +31,7 @@ public enum CommandType {
 	RECEIVES {
 
 		@Override
-		public Command createCommand(Date anOccurred, Customer aCustomer,
+		public SimulatorCommand createCommand(Date anOccurred, Customer aCustomer,
 				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new ReceiveMovieCommand(anOccurred, aCustomer, aMovie,
@@ -50,7 +51,7 @@ public enum CommandType {
 	MAILS {
 
 		@Override
-		public Command createCommand(Date anOccurred, Customer aCustomer,
+		public SimulatorCommand createCommand(Date anOccurred, Customer aCustomer,
 				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new MailMovieCommand(anOccurred, aCustomer, aMovie,
@@ -70,7 +71,7 @@ public enum CommandType {
 	REQUESTS {
 
 		@Override
-		public Command createCommand(Date anOccurred, Customer aCustomer,
+		public SimulatorCommand createCommand(Date anOccurred, Customer aCustomer,
 				Movie aMovie, MediaType aMediaType, RentalService aRentalService) {
 
 			return new RequestMovieCommand(anOccurred, aCustomer, aMovie,
@@ -103,7 +104,7 @@ public enum CommandType {
 	 * @since 1.0.0
 	 * 
 	 */
-	public abstract Command createCommand(Date anOccurred, Customer aCustomer,
+	public abstract SimulatorCommand createCommand(Date anOccurred, Customer aCustomer,
 			Movie aMovie, MediaType aMediaType, RentalService aRentalService);
 
 }

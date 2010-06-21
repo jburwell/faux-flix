@@ -146,4 +146,6 @@ public interface RentalService extends Service<RentalChangedEvent> {
 	 */
 	void createMovieQueues(Movie aMovie);
 
+	Set<Rental> determineOverdueRentals(Date aDueDate);
+	
 }

@@ -28,17 +28,11 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
-import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
-
 import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
-import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -47,48 +41,97 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest {
+public interface SimulatorCommand extends Command<SimulatorCommand> {
 
 	/**
+	 * 
+	 * JavaBean-complaint name of the type property
 	 * 
 	 * @since 1.0.0
 	 * 
 	 */
-	protected static final MediaType MEDIA_TYPE = DVD;
+	public static final String TYPE_PROP_NAME = "type";
 
-	@Test
-	public final void testExecute() {
+	/**
+	 * 
+	 * JavaBean-complaint name of the occurred property
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	public static final String OCCURRED_PROP_NAME = "occurred";
 
-		Date anOccurred = new Date();
+	/**
+	 * 
+	 * JavaBean-complaint name of the customer property
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	public static final String CUSTOMER_PROP_NAME = "customer";
 
-		// Create mocks ...
-		Customer aCustomer = createMock(Customer.class);
-		Movie aMovie = createMock(Movie.class);
-		Rental aRental = createMock(Rental.class);
-		RentalService aRentalService = createMock(RentalService.class);
+	/**
+	 * 
+	 * JavaBean-complaint name of the movie property
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	public static final String MOVIE_PROP_NAME = "movie";
 
-		// Configure mocks ...
-		this.configure(aCustomer, aMovie, aRental, aRentalService, anOccurred);
+	/**
+	 * 
+	 * JavaBean-complaint name of the media type property
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	public static final String MEDIA_TYPE_PROP_NAME = "mediaType";
 
-		replay(aCustomer);
-		replay(aMovie);
-		replay(aRental);
-		replay(aRentalService);
+	/**
+	 * 
+	 * @return The type of command
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	SimulatorCommandType getType();
 
-		SimulatorCommand aCommand = this.getCommandType().createCommand(anOccurred,
-				aCustomer, aMovie, MEDIA_TYPE, aRentalService);
+	/**
+	 * 
+	 * @return The date on which the actions of the command will occur
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	Date getOccurred();
 
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), this.getExpectedResult());
+	/**
+	 * 
+	 * @return The movie for which the command will be executed
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	Movie getMovie();
 
-	}
+	/**
+	 * 
+	 * @return The customer for which the command will be executed
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	Customer getCustomer();
 
-	protected abstract void configure(Customer aCustomer, Movie aMovie,
-			Rental aRental, RentalService aRentalService, Date anOccurred);
-
-	protected abstract String getExpectedResult();
-
-	protected abstract SimulatorCommandType getCommandType();
+	/**
+	 * 
+	 * @return The media type of the movie for which this command will be
+	 *         executed
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	MediaType getMediaType();
 
 }

@@ -26,20 +26,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package net.cockamamy.fauxflix.simulator;
+package net.cockamamy.fauxflix.util.uow;
 
 import static java.lang.String.*;
-import static net.cockamamy.fauxflix.simulator.MailMovieCommand.*;
-import static net.cockamamy.fauxflix.simulator.SimulatorCommandType.*;
-import static org.easymock.EasyMock.*;
-
-import java.util.*;
-
-import net.cockamamy.fauxflix.service.customer.*;
-import net.cockamamy.fauxflix.service.inventory.*;
-import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
+import static net.cockamamy.fauxflix.util.ObjectUtilities.*;
+import static net.cockamamy.fauxflix.util.StringUtilities.*;
 
 /**
  * 
@@ -48,50 +39,90 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-@Test
-public final class MailMovieCommandTest extends AbstractCommandTest {
+public final class DefaultMessage implements Message {
 
-	private static final String CUSTOMER_NAME = "Joe";
-	private static final String TITLE = "The Usual Suspects";
+	private final Severity mySeverity;
+	private final String myMessage;
 
+	public DefaultMessage(Severity aSeverity, String aMessage) {
+
+		super();
+
+		assert aSeverity != null : format(
+				"%1$s(String) requires a non-null Severity", this.getClass()
+						.getName());
+		assert isNotBlank(aMessage) : format(
+				"%1$s(String) requires a non-blank Message", this.getClass()
+						.getName());
+
+		this.mySeverity = aSeverity;
+		this.myMessage = aMessage;
+
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
+	 * @see net.cockamamy.fauxflix.simulator.Message#getMessage()
 	 */
-	@Override
-	protected SimulatorCommandType getCommandType() {
+	public String getMessage() {
 
-		return MAILS;
+		return this.myMessage;
 
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getExpectedResult()
+	 * @see net.cockamamy.fauxflix.simulator.Message#getSeverity()
 	 */
-	@Override
-	protected String getExpectedResult() {
+	public Severity getSeverity() {
 
-		return format(MESSAGE_TEMPLATE, CUSTOMER_NAME, TITLE, MEDIA_TYPE.name()
-				.toLowerCase());
+		return this.mySeverity;
 
 	}
 
-	/* (non-Javadoc)
-	 * @see net.cockamamy.fauxflix.simulator.AbstractCommandTest#configure(net.cockamamy.fauxflix.service.customer.Customer, net.cockamamy.fauxflix.service.inventory.Movie, net.cockamamy.fauxflix.service.rental.Rental, net.cockamamy.fauxflix.service.rental.RentalService, java.util.Date)
-	 */
+	// BEGIN: Object implementation
 	@Override
-	protected void configure(Customer aCustomer, Movie aMovie, Rental aRental,
-			RentalService aRentalService, Date anOccurred) {
-		
-		expect(aCustomer.getName()).andReturn(CUSTOMER_NAME);
-		expect(aMovie.getTitle()).andReturn(TITLE);
-		
+	public boolean equals(Object thatObject) {
+
+		if (thatObject != null
+				&& this.getClass().equals(thatObject.getClass()) == true) {
+
+			Message thatMessage = (Message) thatObject;
+
+			if (isEqualTo(this.myMessage, thatMessage.getMessage()) == true
+					&& this.mySeverity == thatMessage.getSeverity()) {
+
+				return true;
+
+			}
+
+		}
+
+		return false;
+
 	}
+
+	@Override
+	public int hashCode() {
+
+		int aHashCode = 37;
+
+		aHashCode += (aHashCode * 17) + this.myMessage.hashCode();
+		aHashCode += (aHashCode * 17) + this.mySeverity.hashCode();
+
+		return aHashCode;
+
+	}
+
+	@Override
+	public String toString() {
+
+		return format("Message (message: %1$s, severity: %2$s)",
+				this.myMessage, this.mySeverity);
+
+	}
+	// END: Object implementation
 
 }

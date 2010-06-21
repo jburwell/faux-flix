@@ -28,17 +28,8 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
-import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
-
-import java.util.*;
-
-import net.cockamamy.fauxflix.service.customer.*;
-import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -47,48 +38,37 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest {
+public final class SimulatorUOWProcessor extends
+		AbstractUOWProcessor<SimulatorCommand, SimulatorUnitOfWork> {
 
-	/**
-	 * 
-	 * @since 1.0.0
-	 * 
-	 */
-	protected static final MediaType MEDIA_TYPE = DVD;
+	private final RentalService myRentalService;
 
-	@Test
-	public final void testExecute() {
+	public SimulatorUOWProcessor(RentalService aRentalService) {
 
-		Date anOccurred = new Date();
+		super();
 
-		// Create mocks ...
-		Customer aCustomer = createMock(Customer.class);
-		Movie aMovie = createMock(Movie.class);
-		Rental aRental = createMock(Rental.class);
-		RentalService aRentalService = createMock(RentalService.class);
-
-		// Configure mocks ...
-		this.configure(aCustomer, aMovie, aRental, aRentalService, anOccurred);
-
-		replay(aCustomer);
-		replay(aMovie);
-		replay(aRental);
-		replay(aRentalService);
-
-		SimulatorCommand aCommand = this.getCommandType().createCommand(anOccurred,
-				aCustomer, aMovie, MEDIA_TYPE, aRentalService);
-
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), this.getExpectedResult());
+		this.myRentalService = aRentalService;
+		this.myRentalService
+				.registerEventHandler(new RentalChangedEventHandler(
+						this.myRentalService));
 
 	}
 
-	protected abstract void configure(Customer aCustomer, Movie aMovie,
-			Rental aRental, RentalService aRentalService, Date anOccurred);
+	@Override
+	protected void beforeCommandExecute(SimulatorUnitOfWork aUnitOfWork,
+			SimulatorCommand aCommand) {
 
-	protected abstract String getExpectedResult();
+		SimulatorClock aClock = aUnitOfWork.getClock();
 
-	protected abstract SimulatorCommandType getCommandType();
+		if (aCommand.getOccurred().equals(aClock.getToday()) == false) {
+
+			this.myRentalService.determineOverdueRentals(aClock.getToday());
+			aClock.advance();
+			// System.out.println(format("%1$s:", DATE_FORMATTER
+			// .format(this.myDateFactory.getToday())));
+
+		}
+
+	}
 
 }

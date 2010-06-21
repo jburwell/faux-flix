@@ -29,9 +29,7 @@ public final class Application implements Runnable {
 
 	private final File myDataSetDirectory;
 
-	private List<Subsystem> mySubsystems;
-
-	private UnitOfWork myUOWProcessor;
+	private final List<Subsystem> mySubsystems;
 
 	/**
 	 * 
@@ -74,10 +72,12 @@ public final class Application implements Runnable {
 		try {
 
 			// Spin up the subsystems ...
-			this.start();
+			SimulatorUnitOfWork aUnitOfWork = this.start();
 
 			// Execute the simulation ...
-			this.myUOWProcessor.executeCommands();
+			SimulatorUOWProcessor aUOWProcessor = new SimulatorUOWProcessor(
+					findService(RentalService.class));
+			aUOWProcessor.executeCommands(aUnitOfWork);
 
 		} catch (Exception e) {
 
@@ -93,7 +93,7 @@ public final class Application implements Runnable {
 
 	}
 
-	private void start() throws Exception {
+	private SimulatorUnitOfWork start() throws Exception {
 
 		// Temporary code pre-Spring implementation to isolate the
 		// ServiceLocator dependency and improve the testability of the system.
@@ -126,11 +126,11 @@ public final class Application implements Runnable {
 		new InventoryDataLoader(findService(InventoryService.class),
 				this.myDataSetDirectory).loadData();
 
-		this.myUOWProcessor = new DefaultUnitOfWork(new CommandDataLoader(
+		return new SimulatorUnitOfWork(new SimulatorCommandDataLoader(
 				findService(InventoryService.class),
 				findService(CustomerService.class),
 				findService(RentalService.class), this.myDataSetDirectory)
-				.loadData(), findService(RentalService.class));
+				.loadData());
 
 	}
 

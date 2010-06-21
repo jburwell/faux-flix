@@ -3,13 +3,15 @@ package net.cockamamy.fauxflix.simulator;
 import static java.lang.String.*;
 import static java.util.Calendar.*;
 import static java.util.Collections.*;
-import static net.cockamamy.fauxflix.simulator.CommandType.*;
+import static net.cockamamy.fauxflix.simulator.SimulatorCommandType.*;
+import static net.cockamamy.fauxflix.util.uow.Severity.*;
 
 import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -23,11 +25,11 @@ import net.cockamamy.fauxflix.service.rental.*;
  * @since 1.0.0
  * 
  */
-final class MailMovieCommand extends AbstractCommand {
+final class MailMovieCommand extends AbstractSimulatorCommand {
 
 	static final String MESSAGE_TEMPLATE = "%1$s mails back \"%2$s\" (%3$s)";
-	
-	private final Command myReceiveCommand;
+
+	private final SimulatorCommand myReceiveCommand;
 
 	/**
 	 * 
@@ -55,7 +57,8 @@ final class MailMovieCommand extends AbstractCommand {
 		aCalendar.add(DAY_OF_WEEK, 1);
 
 		this.myReceiveCommand = new ReceiveMovieCommand(aCalendar.getTime(),
-				this.getCustomer(), this.getMovie(), this.getMediaType(), aRentalService);
+				this.getCustomer(), this.getMovie(), this.getMediaType(),
+				aRentalService);
 
 	}
 
@@ -64,11 +67,13 @@ final class MailMovieCommand extends AbstractCommand {
 	 * 
 	 * @see net.cockamamy.fauxflix.simulator.Command#execute()
 	 */
-	public String execute() {
+	public List<Message> execute() {
 
-		return format(MESSAGE_TEMPLATE, this.getCustomer()
-				.getName(), this.getMovie().getTitle(), this.getMediaType()
-				.name().toLowerCase());
+		Message aMessage = new DefaultMessage(INFO, format(MESSAGE_TEMPLATE,
+				this.getCustomer().getName(), this.getMovie().getTitle(), this
+						.getMediaType().name().toLowerCase()));
+
+		return unmodifiableList(singletonList(aMessage));
 
 	}
 
@@ -77,7 +82,7 @@ final class MailMovieCommand extends AbstractCommand {
 	 * 
 	 * @see net.cockamamy.fauxflix.simulator.Command#getType()
 	 */
-	public CommandType getType() {
+	public SimulatorCommandType getType() {
 
 		return MAILS;
 
@@ -90,9 +95,9 @@ final class MailMovieCommand extends AbstractCommand {
 	 * net.cockamamy.fauxflix.simulator.AbstractCommand#getAdditionalCommands()
 	 */
 	@Override
-	public Set<Command> getAdditionalCommands() {
+	public Set<SimulatorCommand> getAdditionalCommands() {
 
-		return unmodifiableSet(new HashSet<Command>(
+		return unmodifiableSet(new HashSet<SimulatorCommand>(
 				singletonList(this.myReceiveCommand)));
 
 	}

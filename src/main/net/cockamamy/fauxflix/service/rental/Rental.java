@@ -95,5 +95,5 @@ public interface Rental {
 	 * 
 	 */
 	void setReturnDate(Date aReturnDate);
-
+	
 }

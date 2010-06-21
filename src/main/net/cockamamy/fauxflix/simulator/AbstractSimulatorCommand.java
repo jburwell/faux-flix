@@ -9,6 +9,7 @@ import java.util.*;
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -19,7 +20,7 @@ import net.cockamamy.fauxflix.service.rental.*;
  * @since 1.0.0
  * 
  */
-abstract class AbstractCommand implements Command {
+abstract class AbstractSimulatorCommand implements SimulatorCommand {
 
 	private final Date myOccurred;
 	private final Customer myCustomer;
@@ -42,7 +43,7 @@ abstract class AbstractCommand implements Command {
 	 * @since 1.0.0
 	 * 
 	 */
-	AbstractCommand(Date anOccurred, Customer aCustomer, Movie aMovie,
+	AbstractSimulatorCommand(Date anOccurred, Customer aCustomer, Movie aMovie,
 			MediaType aMediaType, RentalService aRentalService) {
 
 		super();
@@ -116,7 +117,7 @@ abstract class AbstractCommand implements Command {
 	 * 
 	 * @see net.cockamamy.fauxflix.simulator.Command#getAdditionalCommands()
 	 */
-	public Set<Command> getAdditionalCommands() {
+	public Set<SimulatorCommand> getAdditionalCommands() {
 
 		return emptySet();
 
@@ -143,7 +144,7 @@ abstract class AbstractCommand implements Command {
 		if (thatObject != null
 				&& this.getClass().equals(thatObject.getClass()) == true) {
 
-			AbstractCommand thatCommand = (AbstractCommand) thatObject;
+			AbstractSimulatorCommand thatCommand = (AbstractSimulatorCommand) thatObject;
 
 			if (this.myCustomer.equals(thatCommand.getCustomer()) == true
 					&& this.myMediaType.equals(thatCommand.getMediaType()) == true

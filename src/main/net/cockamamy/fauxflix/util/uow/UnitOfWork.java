@@ -1,4 +1,4 @@
-package net.cockamamy.fauxflix.simulator;
+package net.cockamamy.fauxflix.util.uow;
 
 import java.util.*;
 
@@ -12,16 +12,7 @@ import java.util.*;
  * @since 1.0.0
  * 
  */
-public interface UnitOfWork {
-
-	/**
-	 * 
-	 * Executes the commands that compose this unit of work
-	 * 
-	 * @since 1.0.0
-	 * 
-	 */
-	void executeCommands();
+public interface UnitOfWork<C extends Command<C>> {
 
 	/**
 	 * 
@@ -30,6 +21,6 @@ public interface UnitOfWork {
 	 * @since 1.0.0
 	 * 
 	 */
-	Set<Command> getCommands();
+	Set<C> getCommands();
 
 }

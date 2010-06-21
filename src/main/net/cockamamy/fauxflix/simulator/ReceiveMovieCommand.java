@@ -1,13 +1,15 @@
 package net.cockamamy.fauxflix.simulator;
 
 import static java.lang.String.*;
-import static net.cockamamy.fauxflix.simulator.CommandType.*;
+import static java.util.Collections.*;
+import static net.cockamamy.fauxflix.simulator.SimulatorCommandType.*;
 
 import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+import net.cockamamy.fauxflix.util.uow.*;
 
 /**
  * 
@@ -19,7 +21,7 @@ import net.cockamamy.fauxflix.service.rental.*;
  * @since 1.0.0
  * 
  */
-final class ReceiveMovieCommand extends AbstractCommand {
+final class ReceiveMovieCommand extends AbstractSimulatorCommand {
 
 	/**
 	 * 
@@ -48,7 +50,7 @@ final class ReceiveMovieCommand extends AbstractCommand {
 	 * 
 	 * @see net.cockamamy.fauxflix.simulator.Command#execute()
 	 */
-	public String execute() {
+	public List<Message> execute() {
 
 		Rental aRental = this.getRentalService().findRental(this.getCustomer(),
 				this.getMovie(), this.getMediaType());
@@ -59,7 +61,7 @@ final class ReceiveMovieCommand extends AbstractCommand {
 
 		this.getRentalService().returnMovie(aRental, this.getOccurred());
 
-		return null;
+		return emptyList();
 
 	}
 
@@ -68,7 +70,7 @@ final class ReceiveMovieCommand extends AbstractCommand {
 	 * 
 	 * @see net.cockamamy.fauxflix.simulator.Command#getType()
 	 */
-	public CommandType getType() {
+	public SimulatorCommandType getType() {
 
 		return RECEIVES;
 

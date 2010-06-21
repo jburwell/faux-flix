@@ -28,17 +28,17 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.simulator.CommandType.*;
 import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
+import static net.cockamamy.fauxflix.simulator.SimulatorCommandType.*;
 import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
-import org.testng.annotations.*;
-
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
 import net.cockamamy.fauxflix.service.rental.*;
+
+import org.testng.annotations.*;
 
 /**
  * 
@@ -57,7 +57,7 @@ public final class ReceiveMovieCommandTest extends AbstractCommandTest {
 	 * net.cockamamy.fauxflix.simulator.AbstractCommandTest#getCommandType()
 	 */
 	@Override
-	protected CommandType getCommandType() {
+	protected SimulatorCommandType getCommandType() {
 
 		return RECEIVES;
 

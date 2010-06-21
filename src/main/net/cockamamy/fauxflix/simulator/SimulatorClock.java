@@ -28,17 +28,10 @@
  */
 package net.cockamamy.fauxflix.simulator;
 
-import static net.cockamamy.fauxflix.service.inventory.MediaType.*;
-import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
+import static java.util.Calendar.*;
+import static java.lang.String.*;
 
 import java.util.*;
-
-import net.cockamamy.fauxflix.service.customer.*;
-import net.cockamamy.fauxflix.service.inventory.*;
-import net.cockamamy.fauxflix.service.rental.*;
-
-import org.testng.annotations.*;
 
 /**
  * 
@@ -47,48 +40,70 @@ import org.testng.annotations.*;
  * @since 1.0.0
  * 
  */
-public abstract class AbstractCommandTest {
+public final class SimulatorClock {
 
-	/**
-	 * 
-	 * @since 1.0.0
-	 * 
-	 */
-	protected static final MediaType MEDIA_TYPE = DVD;
+	private Date myCurrentDate;
 
-	@Test
-	public final void testExecute() {
+	public SimulatorClock(final Date aStartDate) {
 
-		Date anOccurred = new Date();
+		super();
 
-		// Create mocks ...
-		Customer aCustomer = createMock(Customer.class);
-		Movie aMovie = createMock(Movie.class);
-		Rental aRental = createMock(Rental.class);
-		RentalService aRentalService = createMock(RentalService.class);
+		assert aStartDate != null : format(
+				"%1$s(Date) requires a non-null start date.", this.getClass()
+						.getName());
 
-		// Configure mocks ...
-		this.configure(aCustomer, aMovie, aRental, aRentalService, anOccurred);
-
-		replay(aCustomer);
-		replay(aMovie);
-		replay(aRental);
-		replay(aRentalService);
-
-		SimulatorCommand aCommand = this.getCommandType().createCommand(anOccurred,
-				aCustomer, aMovie, MEDIA_TYPE, aRentalService);
-
-		assertNotNull(aCommand);
-		assertEquals(aCommand.getType(), this.getCommandType());
-		assertEquals(aCommand.execute(), this.getExpectedResult());
+		this.myCurrentDate = aStartDate;
 
 	}
 
-	protected abstract void configure(Customer aCustomer, Movie aMovie,
-			Rental aRental, RentalService aRentalService, Date anOccurred);
+	public Date getToday() {
 
-	protected abstract String getExpectedResult();
+		return new Date(this.myCurrentDate.getTime());
 
-	protected abstract SimulatorCommandType getCommandType();
+	}
+
+	public Date advance() {
+
+		Calendar aCalendar = Calendar.getInstance();
+		aCalendar.add(DAY_OF_MONTH, 1);
+		this.myCurrentDate = aCalendar.getTime();
+
+		return this.getToday();
+
+	}
+
+	@Override
+	public boolean equals(Object thatObject) {
+
+		if (thatObject != null
+				&& this.getClass().equals(thatObject.getClass()) == true) {
+
+			SimulatorClock thatClock = (SimulatorClock) thatObject;
+
+			if (this.myCurrentDate.equals(thatClock.getToday()) == true) {
+
+				return true;
+
+			}
+
+		}
+
+		return false;
+
+	}
+
+	@Override
+	public int hashCode() {
+
+		return (37 * 17) + this.myCurrentDate.hashCode();
+
+	}
+
+	@Override
+	public String toString() {
+
+		return format("Simulator Clock (today: %1$D)", this.myCurrentDate);
+
+	}
 
 }
