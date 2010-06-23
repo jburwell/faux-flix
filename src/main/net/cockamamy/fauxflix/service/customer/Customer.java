@@ -1,5 +1,7 @@
 package net.cockamamy.fauxflix.service.customer;
 
+import net.cockamamy.fauxflix.util.*;
+
 /**
  * 
  * A customer of the Faux Flix rental store.
@@ -9,7 +11,7 @@ package net.cockamamy.fauxflix.service.customer;
  * @since 1.0.0
  * 
  */
-public interface Customer extends Comparable<Customer> {
+public interface Customer extends Comparable<Customer>, Describable {
 
 	/**
 	 * 

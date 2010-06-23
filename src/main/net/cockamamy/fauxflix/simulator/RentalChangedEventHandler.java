@@ -22,13 +22,18 @@ final class RentalChangedEventHandler implements
 	private final RentalService myRentalService;
 
 	public RentalChangedEventHandler(RentalService aRentalService) {
-		
+
 		super();
-		
+
+		assert aRentalService != null : format(
+				"%1$s(RentalService) requires a non-null %2$s instance.",
+				RentalChangedEventHandler.class.getName(), RentalService.class
+						.getName());
+
 		this.myRentalService = aRentalService;
-		
+
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -38,60 +43,24 @@ final class RentalChangedEventHandler implements
 	 */
 	public void handleEvent(RentalChangedEvent anEvent) {
 
-		assert anEvent != null && anEvent.getChangedRental() != null : format("%1$s.handle event requires a non-null event with a non-null changed rental.");
+		assert anEvent != null : format(
+				"%1$s.handleEvent requires a non-null event",
+				RentalChangedEvent.class.getName());
+		assert anEvent.getChangedRental() != null : format(
+				"%1$s.handleEvent requires a non-null changed rental.",
+				RentalChangedEvent.class.getName());
+		assert anEvent.getReason() != null : format(
+				"%1$s.handleEvent requires a non-null reason.",
+				RentalChangedEvent.class.getName());
 
-		Rental theChangedRental = anEvent.getChangedRental();
-
-		String aMessage = null;
-		switch (anEvent.getReason()) {
-
-		case SENT:
-			aMessage = format("Store mails \"%1$s\" (%2$s) to %3$s",
-					theChangedRental.getMovie().getTitle(), theChangedRental
-							.getMediaType().name().toLowerCase(),
-					theChangedRental.getCustomer().getName());
-			break;
-
-		case QUEUED_OUT_OF_STOCK:
-			aMessage = format(
-					"Movie \"%1$s\" (%2$s) is out of stock; %3$s's request was added to the queue.",
-					theChangedRental.getMovie().getTitle(), theChangedRental
-							.getMediaType().name().toLowerCase(),
-					theChangedRental.getCustomer().getName());
-			break;
-
-		case QUEUED_LIMITED_EXCEEDED:
-			aMessage = format(
-					"%1$s has exceed their rental limit; %1$s's request has been added to their rental queue.",
-					theChangedRental.getCustomer().getName());
-			break;
-
-		case REQUESTED:
-			aMessage = format("%1$s requests \"%2$s\" (%3$s)", theChangedRental
-					.getCustomer().getName(), theChangedRental.getMovie()
-					.getTitle(), theChangedRental.getMediaType().name()
-					.toLowerCase());
-			break;
-
-		case RETURNED:
-			aMessage = format(
-					"%1$s's \"%2$s\" returned (%3$s) to stock; %1$s has %4$s movies still rented.",
-					theChangedRental.getCustomer().getName(), theChangedRental
-							.getMovie().getTitle(), theChangedRental
-							.getMediaType().name().toLowerCase(),
-					this.myRentalService.findRentals(theChangedRental.getCustomer())
-							.size());
-
-			break;
-
-		}
+		String aMessage = anEvent.getReason().describeAction(
+				anEvent.getChangedRental(), this.myRentalService);
 
 		if (isNotBlank(aMessage) == true) {
 
 			System.out.println(aMessage);
 
 		}
-
+		
 	}
-
 }

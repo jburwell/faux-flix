@@ -56,29 +56,44 @@ public abstract class AbstractUOWProcessor<C extends Command<C>, U extends UnitO
 
 		if (theCommands.isEmpty() == false) {
 
-			for (C aCommand : theCommands) {
-
-				this.beforeCommandExecute(aUnitOfWork, aCommand);
-
-				aResult.addMessages(aCommand.execute());
-
-				if (aResult.isFailure()) {
-
-					break;
-
-				}
-
-			}
-
-		} else {
-
 			// TODO Convert to a logger warning ...
 			System.err.println("No commands to execute.");
 
 		}
 
+		this.prepareCommandForExecution(aUnitOfWork, aResult);
+		
+		for (C aCommand : theCommands) {
+
+			this.beforeCommandExecute(aUnitOfWork, aCommand);
+
+			aResult.addMessages(aCommand.execute());
+
+			if (aResult.isFailure()) {
+
+				break;
+
+			}
+
+		}
+
 		return aResult;
 
+	}
+
+	/**
+	 *
+	 * @param aUnitOfWork
+	 * @param aResult
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	protected void prepareCommandForExecution(U aUnitOfWork,
+			Result<C, U> aResult) {
+
+		// By default, do nothing ...
+		
 	}
 
 	/**

@@ -3,14 +3,13 @@ package net.cockamamy.fauxflix.service.rental;
 import static java.lang.String.*;
 import static java.util.Collections.*;
 import static net.cockamamy.fauxflix.service.customer.MembershipLevel.*;
-import static net.cockamamy.fauxflix.service.rental.RentalChangedEvent.ChangeReason.*;
+import static net.cockamamy.fauxflix.service.rental.ChangeReason.*;
 
 import java.util.*;
 
 import net.cockamamy.fauxflix.service.*;
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
-import net.cockamamy.fauxflix.service.rental.RentalChangedEvent.*;
 import net.cockamamy.fauxflix.util.*;
 
 /**

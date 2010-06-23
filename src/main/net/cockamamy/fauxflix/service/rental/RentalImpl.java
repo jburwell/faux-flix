@@ -241,6 +241,19 @@ final class RentalImpl implements Rental {
 						.format(this.myReturnDate) : "");
 
 	}
+
 	// END: Object implementation
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.cockamamy.fauxflix.util.Describable#describe()
+	 */
+	public String describe() {
+
+		return format("Movie \"%1$s\" (%2$s)", this.myMovie.describe(),
+				this.myMediaType.describe());
+
+	}
 
 }

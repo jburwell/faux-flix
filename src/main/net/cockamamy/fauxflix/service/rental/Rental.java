@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.cockamamy.fauxflix.service.customer.*;
 import net.cockamamy.fauxflix.service.inventory.*;
+import net.cockamamy.fauxflix.util.*;
 
 /**
  * 
@@ -14,7 +15,7 @@ import net.cockamamy.fauxflix.service.inventory.*;
  * @since 1.0.0
  * 
  */
-public interface Rental {
+public interface Rental extends Describable {
 
 	/**
 	 * 

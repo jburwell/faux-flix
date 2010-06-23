@@ -1,5 +1,7 @@
 package net.cockamamy.fauxflix.service.inventory;
 
+import net.cockamamy.fauxflix.util.*;
+
 /**
  * 
  * A movie in the Faux Flix catalog
@@ -9,7 +11,7 @@ package net.cockamamy.fauxflix.service.inventory;
  * @since 1.0.0
  *
  */
-public interface Movie extends Comparable<Movie> {
+public interface Movie extends Comparable<Movie>, Describable {
 
 	/**
 	 * 

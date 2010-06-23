@@ -1,5 +1,7 @@
 package net.cockamamy.fauxflix.service.inventory;
 
+import net.cockamamy.fauxflix.util.*;
+
 /**
  * 
  * The types of media Faux Flix rental store rents
@@ -9,7 +11,7 @@ package net.cockamamy.fauxflix.service.inventory;
  * @since 1.0.0
  * 
  */
-public enum MediaType {
+public enum MediaType implements Describable {
 
 	/**
 	 * 
@@ -37,5 +39,11 @@ public enum MediaType {
 	 * 
 	 */
 	NONE;
+
+	public String describe() {
+
+		return this.name().toLowerCase();
+		
+	}
 
 }

@@ -17,9 +17,9 @@ import net.cockamamy.fauxflix.util.uow.*;
 public final class SimulatorUnitOfWork implements UnitOfWork<SimulatorCommand> {
 
 	private final Set<SimulatorCommand> myCommands;
-	
+
 	private final SimulatorClock myClock;
-	
+
 	/**
 	 * 
 	 * @param theCommands
@@ -53,10 +53,11 @@ public final class SimulatorUnitOfWork implements UnitOfWork<SimulatorCommand> {
 			this.myCommands.addAll(aCommand.getAdditionalCommands());
 
 		}
-		
-		SimulatorCommand theFirstCommand = (SimulatorCommand) this.myCommands.toArray()[0];
-		this.myClock = new SimulatorClock(theFirstCommand.getOccurred());
 
+		SimulatorCommand theFirstCommand = (SimulatorCommand) this.myCommands
+				.toArray()[0];
+		this.myClock = new SimulatorClock(theFirstCommand.getOccurred());
+		
 	}
 
 	public final Set<SimulatorCommand> getCommands() {
@@ -109,10 +110,9 @@ public final class SimulatorUnitOfWork implements UnitOfWork<SimulatorCommand> {
 
 	}
 
-	public SimulatorClock getClock()
-	{
-		
+	public SimulatorClock getClock() {
+
 		return this.myClock;
 	}
-	
+
 }

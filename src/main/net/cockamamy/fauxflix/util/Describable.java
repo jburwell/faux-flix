@@ -26,56 +26,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-package net.cockamamy.fauxflix.simulator;
-
-import net.cockamamy.fauxflix.service.rental.*;
-import net.cockamamy.fauxflix.util.uow.*;
+package net.cockamamy.fauxflix.util;
 
 /**
+ * 
+ * Defines behavior to retrieve a canonical description of an object's current
+ * state.
  * 
  * @author jburwell
  * 
  * @since 1.0.0
  * 
  */
-public final class SimulatorUOWProcessor extends
-		AbstractUOWProcessor<SimulatorCommand, SimulatorUnitOfWork> {
+public interface Describable {
 
-	private final RentalService myRentalService;
-
-	public SimulatorUOWProcessor(RentalService aRentalService) {
-
-		super();
-
-		this.myRentalService = aRentalService;
-		this.myRentalService
-				.registerEventHandler(new RentalChangedEventHandler(
-						this.myRentalService));
-
-	}
-
-	@Override
-	protected void prepareCommandForExecution(SimulatorUnitOfWork aUnitOfWork,
-			Result<SimulatorCommand, SimulatorUnitOfWork> aResult) {
-		// TODO Auto-generated method stub
-		super.prepareCommandForExecution(aUnitOfWork, aResult);
-	}
-
-	@Override
-	protected void beforeCommandExecute(SimulatorUnitOfWork aUnitOfWork,
-			SimulatorCommand aCommand) {
-
-		SimulatorClock aClock = aUnitOfWork.getClock();
-
-		if (aCommand.getOccurred().equals(aClock.getToday()) == false) {
-
-			this.myRentalService.determineOverdueRentals(aClock.getToday());
-			aClock.advance();
-			// System.out.println(format("%1$s:", DATE_FORMATTER
-			// .format(this.myDateFactory.getToday())));
-
-		}
-
-	}
+	/**
+	 * 
+	 * @return A canonical description of this object current state.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 */
+	public String describe();
 
 }

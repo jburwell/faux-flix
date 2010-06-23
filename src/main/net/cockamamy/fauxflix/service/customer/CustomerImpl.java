@@ -138,4 +138,13 @@ final class CustomerImpl implements Customer {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see net.cockamamy.fauxflix.util.Describable#describe()
+	 */
+	public String describe() {
+		
+		return this.myName;
+		
+	}
+
 }

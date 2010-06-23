@@ -113,4 +113,13 @@ final class MovieImpl implements Movie {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see net.cockamamy.fauxflix.util.Describable#describe()
+	 */
+	public String describe() {
+		
+		return this.myTitle;
+		
+	}
+
 }

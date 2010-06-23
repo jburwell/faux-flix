@@ -134,6 +134,7 @@ public final class Application implements Runnable {
 
 	}
 
+	// TODO Remove this method as part of Spring implementation ...
 	private void registerServices(Subsystem aSubsystem) {
 
 		Map<Class<? extends Service<?>>, ? extends Service<?>> theMappings = aSubsystem
